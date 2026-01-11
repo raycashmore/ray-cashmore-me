@@ -1,1 +1,144 @@
 @import "tailwindcss";
+
+/* Class-based dark mode for manual toggle */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Custom theme tokens */
+@theme {
+  --font-family-sans: "Outfit", system-ui, sans-serif;
+}
+
+/* CSS variables for theming */
+:root {
+  --color-background: 255 255 255;
+  --color-foreground: 0 0 0;
+  --color-muted: 102 102 102;
+  --color-border: 229 229 229;
+}
+
+.dark {
+  --color-background: 0 0 0;
+  --color-foreground: 255 255 255;
+  --color-muted: 153 153 153;
+  --color-border: 51 51 51;
+}
+
+/* Base styles */
+html {
+  font-family: var(--font-family-sans);
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  scroll-behavior: smooth;
+}
+
+/* Reset link styles */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+body {
+  min-height: 100vh;
+  background-color: rgb(var(--color-background));
+}
+
+/* Utility classes for theme colors */
+.bg-background { background-color: rgb(var(--color-background)); }
+.bg-foreground { background-color: rgb(var(--color-foreground)); }
+.text-foreground { color: rgb(var(--color-foreground)); }
+.text-muted { color: rgb(var(--color-muted)); }
+.text-background { color: rgb(var(--color-background)); }
+.border-border { border-color: rgb(var(--color-border)); }
+
+/* Prose styles for blog content */
+.prose {
+  max-width: 65ch;
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+  color: rgb(var(--color-foreground));
+}
+
+.prose h1 { font-size: 2rem; }
+.prose h2 { font-size: 1.5rem; }
+.prose h3 { font-size: 1.25rem; }
+
+.prose p {
+  margin-bottom: 1.5em;
+  line-height: 1.75;
+  color: rgb(var(--color-muted));
+}
+
+.prose a {
+  color: rgb(var(--color-foreground));
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.prose a:hover {
+  opacity: 0.6;
+}
+
+.prose ul,
+.prose ol {
+  margin: 1.5em 0;
+  padding-left: 1.5em;
+}
+
+.prose li {
+  margin-bottom: 0.5em;
+  color: rgb(var(--color-muted));
+}
+
+.prose blockquote {
+  border-left: 2px solid rgb(var(--color-border));
+  padding-left: 1em;
+  margin: 1.5em 0;
+  font-style: italic;
+  color: rgb(var(--color-muted));
+}
+
+.prose code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.875em;
+  background: rgb(var(--color-border) / 0.5);
+  padding: 0.2em 0.4em;
+  border-radius: 0.25em;
+}
+
+.prose pre {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  padding: 1em;
+  border-radius: 0.5em;
+  overflow-x: auto;
+  margin: 1.5em 0;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Subtle transitions for hover states */
+a, button {
+  transition: opacity 150ms ease;
+}
+
+/* Focus states for accessibility */
+:focus-visible {
+  outline: 2px solid rgb(var(--color-foreground));
+  outline-offset: 2px;
+}
+
+/* Selection styling */
+::selection {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}

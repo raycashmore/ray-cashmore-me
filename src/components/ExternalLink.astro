@@ -1,0 +1,23 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  external?: boolean;
+}
+
+const { href, label, external = true } = Astro.props;
+---
+
+<a
+  href={href}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+  class="inline-flex items-center gap-2 text-foreground hover:opacity-60"
+>
+  {label}
+  {external && (
+    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M7 17L17 7M17 7H7M17 7V17" />
+    </svg>
+  )}
+</a>
