@@ -1,16 +1,17 @@
 ---
-import ThemeToggle from './ThemeToggle.astro';
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-  <nav class="max-w-4xl mx-auto px-6 py-5 flex justify-between items-center">
-    <a href="/" class="text-sm font-semibold tracking-wide hover:opacity-60">
-      RC
-    </a>
-    <div class="flex items-center gap-8">
-      <a href="/thoughts" class="text-sm hover:opacity-60">Thoughts</a>
-      <a href="/cv" class="text-sm hover:opacity-60">CV</a>
-      <ThemeToggle />
+  <nav class="swiss-grid py-5">
+    <div class="col-span-full flex justify-between items-center">
+      <a href="/" class="text-sm font-semibold tracking-wide hover:opacity-60">
+        RC
+      </a>
+      <div class="flex items-center gap-8">
+        <a href="#experience" class="text-sm hover:opacity-60 hidden sm:block">Experience</a>
+        <a href="#connect" class="text-sm hover:opacity-60 hidden sm:block">Connect</a>
+        <a href="/thoughts" class="text-sm hover:opacity-60">Writing</a>
+      </div>
     </div>
   </nav>
 </header>

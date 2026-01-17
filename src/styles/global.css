@@ -142,3 +142,108 @@ a, button {
   background: rgb(var(--color-foreground));
   color: rgb(var(--color-background));
 }
+
+/* ========================================
+   Swiss Design System
+   ======================================== */
+
+/* Grid Container */
+.swiss-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 1024px) {
+  .swiss-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .swiss-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* Typography Scale */
+.type-hero-name {
+  font-size: clamp(3.5rem, 11vw, 9rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.88;
+}
+
+.type-hero-tagline {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.type-section-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.type-section-index {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+}
+
+.type-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Keylines */
+.keyline {
+  height: 1px;
+  background-color: rgb(var(--color-border));
+}
+
+.keyline-vertical {
+  width: 1px;
+  background-color: rgb(var(--color-border));
+}
+
+/* Section Spacing */
+.section-padding {
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
+
+@media (max-width: 640px) {
+  .section-padding {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+}
+
+/* Section Index Navigation */
+.section-index-line {
+  width: 24px;
+  height: 1px;
+  background-color: rgb(var(--color-border));
+  transition: width 300ms ease, background-color 300ms ease;
+}
+
+.section-index-line.active {
+  width: 48px;
+  background-color: rgb(var(--color-foreground));
+}
+
+/* Smooth scroll target offset for fixed header */
+[id] {
+  scroll-margin-top: 100px;
+}

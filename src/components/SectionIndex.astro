@@ -1,0 +1,104 @@
+---
+interface Props {
+  sections: { id: string; number: string }[];
+}
+
+const { sections } = Astro.props;
+---
+
+<nav
+  id="section-index"
+  class="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-end gap-6"
+  aria-label="Page sections"
+>
+  {sections.map((section) => (
+    <a
+      href={`#${section.id}`}
+      class="section-index-item flex items-center gap-3 group"
+      data-section={section.id}
+    >
+      <span class="section-index-line" />
+      <span class="type-section-index text-muted group-hover:text-foreground transition-colors">
+        {section.number}
+      </span>
+    </a>
+  ))}
+
+  <!-- Theme Toggle -->
+  <button
+    id="theme-toggle"
+    class="mt-4 w-8 h-8 flex items-center justify-center hover:opacity-60 text-muted hover:text-foreground transition-colors"
+    aria-label="Toggle dark mode"
+  >
+    <!-- Sun icon (shown in dark mode) -->
+    <svg
+      class="hidden dark:block w-5 h-5"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </svg>
+    <!-- Moon icon (shown in light mode) -->
+    <svg
+      class="block dark:hidden w-5 h-5"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  </button>
+</nav>
+
+<script>
+  // Theme toggle functionality
+  const toggle = document.getElementById('theme-toggle');
+  toggle?.addEventListener('click', () => {
+    const html = document.documentElement;
+    html.classList.toggle('dark');
+    localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+  });
+
+  // Intersection Observer for active section detection
+  const sections = document.querySelectorAll('section[id]');
+  const indexItems = document.querySelectorAll('.section-index-item');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '-20% 0px -70% 0px',
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const sectionId = entry.target.id;
+
+        // Update active states
+        indexItems.forEach((item) => {
+          const line = item.querySelector('.section-index-line');
+          const isActive = item.getAttribute('data-section') === sectionId;
+
+          if (isActive) {
+            line?.classList.add('active');
+          } else {
+            line?.classList.remove('active');
+          }
+        });
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach((section) => observer.observe(section));
+
+  // Set initial active state
+  if (indexItems.length > 0) {
+    indexItems[0].querySelector('.section-index-line')?.classList.add('active');
+  }
+</script>
