@@ -248,19 +248,6 @@ a, button {
   }
 }
 
-/* Section Index Navigation */
-.section-index-line {
-  width: 24px;
-  height: 1px;
-  background-color: rgb(var(--color-border));
-  transition: width 300ms ease, background-color 300ms ease;
-}
-
-.section-index-line.active {
-  width: 48px;
-  background-color: rgb(var(--color-foreground));
-}
-
 /* Smooth scroll target offset for fixed header */
 [id] {
   scroll-margin-top: 100px;
