@@ -5,11 +5,52 @@ import SectionIndex from '../components/SectionIndex.astro';
 import Section from '../components/Section.astro';
 import BlogCard from '../components/BlogCard.astro';
 import ExternalLink from '../components/ExternalLink.astro';
+import SkillCategory from '../components/SkillCategory.astro';
+import ExperienceEntry from '../components/ExperienceEntry.astro';
 
 const posts = await getCollection('thoughts', ({ data }) => !data.draft);
 const sortedPosts = posts
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
+
+const experiences = [
+  {
+    dateRange: "Jul 2024 — Present",
+    role: "Solutions Engineer",
+    company: "HERE (OpenFin)",
+    description: "Growing the Asia-Pac region by forging technical pre and post-sales relationships. Collaborating with sales, engineering, product, and customer success teams to ensure successful implementations of the HERE Enterprise Browser. On-site consulting and hands-on engineering for a forthcoming, groundbreaking desktop platform at a major Australian institution."
+  },
+  {
+    dateRange: "Jan 2024 — Jul 2024",
+    role: "Senior Software Engineer",
+    company: "Leonardo.Ai",
+    description: "Software engineering and thought leadership at Australia's leading hyper-growth AI startup. Led the build of the flagship Image Generation v2 interface and contributed to key features like the Universal Upscaler during a pivotal growth phase. Improved delivery cadence, contributed to extensive hiring, and coached the team on scale-up delivery best practices."
+  },
+  {
+    dateRange: "Jan 2020 — Sep 2023",
+    role: "Head of UI / UX",
+    company: "Yieldbroker",
+    description: "Owned discovery and delivery of a high-performance financial trading platform, combining hands-on software engineering, UX design, and people management. Led chapter for all UI engineers through hiring, mentoring, and coaching. Worked closely with the CTO on organisational design. Established and led UX design practice with rapid prototypes, high-fidelity designs, and design systems in Figma."
+  },
+  {
+    dateRange: "Mar 2010 — Dec 2019",
+    role: "Consultant Software Engineer",
+    company: "Lab49",
+    description: "Go-to specialist for high-performance financial trading UIs across major institutions. Worked on commodities trading at Commonwealth Bank, leading the multi-year build of a new metals trading platform. Developed rich UIs for foreign exchange trading at NAB, fixed income at UBS, and contributed to the Matrix platform at Morgan Stanley. Expertise in streaming data, data grids, visualisations, and compliance-heavy environments."
+  }
+];
+
+const skillCategories = [
+  { title: "Front-end", skills: ["TypeScript", "React", "Next.js", "TanStack", "XState", "Angular", "RxJS", "Storybook", "SvelteKit", "Tailwind"] },
+  { title: "Back-end", skills: ["Node", "tRPC", "Drizzle", "REST", "NestJS", "GraphQL", "Postgres", "PayloadCMS"] },
+  { title: "Mobile", skills: ["React Native", "Expo"] },
+  { title: "Testing & Cloud", skills: ["Cypress", "Puppeteer", "Cucumber", "Playwright", "AWS", "Vercel", "Clerk", "Railway", "Convex"] },
+  { title: "AI & Developer Tools", skills: ["MCP", "OpenAI API", "Ollama", "Claude Code", "Gemini CLI", "V0", "Bolt", "Lovable", "n8n"] },
+  { title: "Engineering Management", skills: ["Hiring", "Mentoring", "Code reviews", "DORA metrics", "Team Topologies", "Flow metrics", "Continuous delivery", "Scrum", "Lean/Kanban"] },
+  { title: "User Experience Design", skills: ["Prototyping", "Journey mapping", "Personas", "One-pagers", "Interaction design", "Story mapping", "Design systems", "Figma", "Sketch", "Zeplin", "Axure"] },
+  { title: "Product Management", skills: ["Product roadmaps", "Requirements gathering", "OKRs", "Stakeholder collaboration", "Pre-sales consulting"] },
+  { title: "Domain Knowledge", skills: ["Foreign exchange", "Fixed income", "Commodities", "Regulation", "Image generation", "Developer productivity"] }
+];
 ---
 
 <BaseLayout title="Ray Cashmore — Product Engineer">
@@ -148,49 +189,9 @@ const sortedPosts = posts
 
       <!-- Experience Entries -->
       <div class="space-y-12 mb-20">
-        <article class="grid md:grid-cols-4 gap-4 pb-12 border-b border-border">
-          <div class="text-sm text-muted">Jul 2024 — Present</div>
-          <div class="md:col-span-3">
-            <h3 class="font-medium text-lg">Solutions Engineer</h3>
-            <p class="text-muted mt-1">HERE (OpenFin)</p>
-            <p class="mt-4 text-muted leading-relaxed">
-              Growing the Asia-Pac region by forging technical pre and post-sales relationships. Collaborating with sales, engineering, product, and customer success teams to ensure successful implementations of the HERE Enterprise Browser. On-site consulting and hands-on engineering for a forthcoming, groundbreaking desktop platform at a major Australian institution.
-            </p>
-          </div>
-        </article>
-
-        <article class="grid md:grid-cols-4 gap-4 pb-12 border-b border-border">
-          <div class="text-sm text-muted">Jan 2024 — Jul 2024</div>
-          <div class="md:col-span-3">
-            <h3 class="font-medium text-lg">Senior Software Engineer</h3>
-            <p class="text-muted mt-1">Leonardo.Ai</p>
-            <p class="mt-4 text-muted leading-relaxed">
-              Software engineering and thought leadership at Australia's leading hyper-growth AI startup. Led the build of the flagship Image Generation v2 interface and contributed to key features like the Universal Upscaler during a pivotal growth phase. Improved delivery cadence, contributed to extensive hiring, and coached the team on scale-up delivery best practices.
-            </p>
-          </div>
-        </article>
-
-        <article class="grid md:grid-cols-4 gap-4 pb-12 border-b border-border">
-          <div class="text-sm text-muted">Jan 2020 — Sep 2023</div>
-          <div class="md:col-span-3">
-            <h3 class="font-medium text-lg">Head of UI / UX</h3>
-            <p class="text-muted mt-1">Yieldbroker</p>
-            <p class="mt-4 text-muted leading-relaxed">
-              Owned discovery and delivery of a high-performance financial trading platform, combining hands-on software engineering, UX design, and people management. Led chapter for all UI engineers through hiring, mentoring, and coaching. Worked closely with the CTO on organisational design. Established and led UX design practice with rapid prototypes, high-fidelity designs, and design systems in Figma.
-            </p>
-          </div>
-        </article>
-
-        <article class="grid md:grid-cols-4 gap-4">
-          <div class="text-sm text-muted">Mar 2010 — Dec 2019</div>
-          <div class="md:col-span-3">
-            <h3 class="font-medium text-lg">Consultant Software Engineer</h3>
-            <p class="text-muted mt-1">Lab49</p>
-            <p class="mt-4 text-muted leading-relaxed">
-              Go-to specialist for high-performance financial trading UIs across major institutions. Worked on commodities trading at Commonwealth Bank, leading the multi-year build of a new metals trading platform. Developed rich UIs for foreign exchange trading at NAB, fixed income at UBS, and contributed to the Matrix platform at Morgan Stanley. Expertise in streaming data, data grids, visualisations, and compliance-heavy environments.
-            </p>
-          </div>
-        </article>
+        {experiences.map((exp, i) => (
+          <ExperienceEntry {...exp} isLast={i === experiences.length - 1} />
+        ))}
       </div>
 
       <!-- Education -->
@@ -216,138 +217,9 @@ const sortedPosts = posts
       <!-- Skills -->
       <div>
         <h3 class="type-label text-muted mb-10">Skills</h3>
-
-        <!-- Front-end -->
-        <div class="mb-12">
-          <h4 class="text-sm font-medium text-foreground mb-4">Front-end</h4>
-          <div class="flex flex-wrap gap-3">
-            <span class="px-4 py-2 border border-border text-sm">TypeScript</span>
-            <span class="px-4 py-2 border border-border text-sm">React</span>
-            <span class="px-4 py-2 border border-border text-sm">Next.js</span>
-            <span class="px-4 py-2 border border-border text-sm">TanStack</span>
-            <span class="px-4 py-2 border border-border text-sm">XState</span>
-            <span class="px-4 py-2 border border-border text-sm">Angular</span>
-            <span class="px-4 py-2 border border-border text-sm">RxJS</span>
-            <span class="px-4 py-2 border border-border text-sm">Storybook</span>
-            <span class="px-4 py-2 border border-border text-sm">SvelteKit</span>
-            <span class="px-4 py-2 border border-border text-sm">Tailwind</span>
-          </div>
-        </div>
-
-        <!-- Back-end -->
-        <div class="mb-12">
-          <h4 class="text-sm font-medium text-foreground mb-4">Back-end</h4>
-          <div class="flex flex-wrap gap-3">
-            <span class="px-4 py-2 border border-border text-sm">Node</span>
-            <span class="px-4 py-2 border border-border text-sm">tRPC</span>
-            <span class="px-4 py-2 border border-border text-sm">Drizzle</span>
-            <span class="px-4 py-2 border border-border text-sm">REST</span>
-            <span class="px-4 py-2 border border-border text-sm">NestJS</span>
-            <span class="px-4 py-2 border border-border text-sm">GraphQL</span>
-            <span class="px-4 py-2 border border-border text-sm">Postgres</span>
-            <span class="px-4 py-2 border border-border text-sm">PayloadCMS</span>
-          </div>
-        </div>
-
-        <!-- Mobile -->
-        <div class="mb-12">
-          <h4 class="text-sm font-medium text-foreground mb-4">Mobile</h4>
-          <div class="flex flex-wrap gap-3">
-            <span class="px-4 py-2 border border-border text-sm">React Native</span>
-            <span class="px-4 py-2 border border-border text-sm">Expo</span>
-          </div>
-        </div>
-
-        <!-- Testing & Cloud -->
-        <div class="mb-12">
-          <h4 class="text-sm font-medium text-foreground mb-4">Testing & Cloud</h4>
-          <div class="flex flex-wrap gap-3">
-            <span class="px-4 py-2 border border-border text-sm">Cypress</span>
-            <span class="px-4 py-2 border border-border text-sm">Puppeteer</span>
-            <span class="px-4 py-2 border border-border text-sm">Cucumber</span>
-            <span class="px-4 py-2 border border-border text-sm">Playwright</span>
-            <span class="px-4 py-2 border border-border text-sm">AWS</span>
-            <span class="px-4 py-2 border border-border text-sm">Vercel</span>
-            <span class="px-4 py-2 border border-border text-sm">Clerk</span>
-            <span class="px-4 py-2 border border-border text-sm">Railway</span>
-            <span class="px-4 py-2 border border-border text-sm">Convex</span>
-          </div>
-        </div>
-
-        <!-- AI & Developer Tools -->
-        <div class="mb-12">
-          <h4 class="text-sm font-medium text-foreground mb-4">AI & Developer Tools</h4>
-          <div class="flex flex-wrap gap-3">
-            <span class="px-4 py-2 border border-border text-sm">MCP</span>
-            <span class="px-4 py-2 border border-border text-sm">OpenAI API</span>
-            <span class="px-4 py-2 border border-border text-sm">Ollama</span>
-            <span class="px-4 py-2 border border-border text-sm">Claude Code</span>
-            <span class="px-4 py-2 border border-border text-sm">Gemini CLI</span>
-            <span class="px-4 py-2 border border-border text-sm">V0</span>
-            <span class="px-4 py-2 border border-border text-sm">Bolt</span>
-            <span class="px-4 py-2 border border-border text-sm">Lovable</span>
-            <span class="px-4 py-2 border border-border text-sm">n8n</span>
-          </div>
-        </div>
-
-        <!-- Engineering Management -->
-        <div class="mb-12">
-          <h4 class="text-sm font-medium text-foreground mb-4">Engineering Management</h4>
-          <div class="flex flex-wrap gap-3">
-            <span class="px-4 py-2 border border-border text-sm">Hiring</span>
-            <span class="px-4 py-2 border border-border text-sm">Mentoring</span>
-            <span class="px-4 py-2 border border-border text-sm">Code reviews</span>
-            <span class="px-4 py-2 border border-border text-sm">DORA metrics</span>
-            <span class="px-4 py-2 border border-border text-sm">Team Topologies</span>
-            <span class="px-4 py-2 border border-border text-sm">Flow metrics</span>
-            <span class="px-4 py-2 border border-border text-sm">Continuous delivery</span>
-            <span class="px-4 py-2 border border-border text-sm">Scrum</span>
-            <span class="px-4 py-2 border border-border text-sm">Lean/Kanban</span>
-          </div>
-        </div>
-
-        <!-- User Experience Design -->
-        <div class="mb-12">
-          <h4 class="text-sm font-medium text-foreground mb-4">User Experience Design</h4>
-          <div class="flex flex-wrap gap-3">
-            <span class="px-4 py-2 border border-border text-sm">Prototyping</span>
-            <span class="px-4 py-2 border border-border text-sm">Journey mapping</span>
-            <span class="px-4 py-2 border border-border text-sm">Personas</span>
-            <span class="px-4 py-2 border border-border text-sm">One-pagers</span>
-            <span class="px-4 py-2 border border-border text-sm">Interaction design</span>
-            <span class="px-4 py-2 border border-border text-sm">Story mapping</span>
-            <span class="px-4 py-2 border border-border text-sm">Design systems</span>
-            <span class="px-4 py-2 border border-border text-sm">Figma</span>
-            <span class="px-4 py-2 border border-border text-sm">Sketch</span>
-            <span class="px-4 py-2 border border-border text-sm">Zeplin</span>
-            <span class="px-4 py-2 border border-border text-sm">Axure</span>
-          </div>
-        </div>
-
-        <!-- Product Management -->
-        <div class="mb-12">
-          <h4 class="text-sm font-medium text-foreground mb-4">Product Management</h4>
-          <div class="flex flex-wrap gap-3">
-            <span class="px-4 py-2 border border-border text-sm">Product roadmaps</span>
-            <span class="px-4 py-2 border border-border text-sm">Requirements gathering</span>
-            <span class="px-4 py-2 border border-border text-sm">OKRs</span>
-            <span class="px-4 py-2 border border-border text-sm">Stakeholder collaboration</span>
-            <span class="px-4 py-2 border border-border text-sm">Pre-sales consulting</span>
-          </div>
-        </div>
-
-        <!-- Domain Knowledge -->
-        <div>
-          <h4 class="text-sm font-medium text-foreground mb-4">Domain Knowledge</h4>
-          <div class="flex flex-wrap gap-3">
-            <span class="px-4 py-2 border border-border text-sm">Foreign exchange</span>
-            <span class="px-4 py-2 border border-border text-sm">Fixed income</span>
-            <span class="px-4 py-2 border border-border text-sm">Commodities</span>
-            <span class="px-4 py-2 border border-border text-sm">Regulation</span>
-            <span class="px-4 py-2 border border-border text-sm">Image generation</span>
-            <span class="px-4 py-2 border border-border text-sm">Developer productivity</span>
-          </div>
-        </div>
+        {skillCategories.map(category => (
+          <SkillCategory title={category.title} skills={category.skills} />
+        ))}
       </div>
     </Section>
 
