@@ -34,10 +34,18 @@ const experiences = [
   },
   {
     dateRange: "Mar 2010 — Dec 2019",
-    role: "Consultant Software Engineer",
+    role: "Senior Software Engineer",
     company: "Lab49",
     description: "Go-to specialist for high-performance financial trading UIs across major institutions. Worked on commodities trading at Commonwealth Bank, leading the multi-year build of a new metals trading platform. Developed rich UIs for foreign exchange trading at NAB, fixed income at UBS, and contributed to the Matrix platform at Morgan Stanley. Expertise in streaming data, data grids, visualisations, and compliance-heavy environments."
   }
+];
+
+const earlyCareer = [
+  { role: "Adobe Consulting", description: "Built exclusive social network for the World Economic Forum" },
+  { role: "Razorfish, R/GA, Cimex", description: "Freelance roles at London's top digital agencies" },
+  { role: "Doof", description: "Early employee at hyper-growth online gaming startup" },
+  { role: "Catalyst, Learning Curve, Nortia", description: "Developed interactive E-Learning platforms" },
+  { role: "Art Direction", description: "Introduced data driven websites to highly creative print-based design agency" }
 ];
 
 const skillCategories = [
@@ -194,24 +202,19 @@ const skillCategories = [
         ))}
       </div>
 
-      <!-- Education -->
-      <div class="mb-20">
-        <h3 class="type-label text-muted mb-10">Education</h3>
-        <article class="grid md:grid-cols-4 gap-4 pb-12 border-b border-border">
-          <div class="text-sm text-muted"></div>
-          <div class="md:col-span-3">
-            <h4 class="font-medium text-lg">Bachelor of Information Technology</h4>
-            <p class="text-muted mt-1">University of Canberra</p>
-            <p class="text-muted text-sm mt-1">Minor: Marketing</p>
-          </div>
-        </article>
-        <article class="grid md:grid-cols-4 gap-4">
-          <div class="text-sm text-muted"></div>
-          <div class="md:col-span-3">
-            <h4 class="font-medium text-lg">Senior Secondary Certificate</h4>
-            <p class="text-muted mt-1">Marist College</p>
-          </div>
-        </article>
+      <!-- Early Career Highlights -->
+      <div class="mb-20 pt-12 border-t border-border">
+        <h3 class="type-label text-muted mb-6">Early Career Highlights</h3>
+        <div class="space-y-3">
+          {earlyCareer.map((item) => (
+            <div class="flex md:grid md:grid-cols-4 md:gap-4">
+              <div class="hidden md:block"></div>
+              <div class="md:col-span-3">
+                <p class="text-sm"><span class="font-medium">{item.role}</span> — <span class="text-muted">{item.description}</span></p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <!-- Skills -->
