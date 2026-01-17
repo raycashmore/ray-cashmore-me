@@ -1,0 +1,24 @@
+---
+interface Props {
+  id: string;
+  number: string;
+  class?: string;
+  hideNumber?: boolean;
+}
+
+const { id, number, class: className = '', hideNumber = false } = Astro.props;
+---
+
+<section id={id} class:list={['section-padding', className]}>
+  <div class="swiss-grid">
+    {!hideNumber && (
+      <div class="hidden sm:block">
+        <span class="type-section-index text-muted block mb-3">{number}</span>
+        <div class="keyline w-12" />
+      </div>
+    )}
+    <div class:list={[hideNumber ? 'col-span-full' : 'col-span-full sm:col-span-5 lg:col-span-5']}>
+      <slot />
+    </div>
+  </div>
+</section>

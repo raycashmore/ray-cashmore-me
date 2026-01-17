@@ -1,25 +1,45 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
-import Container from '../components/Container.astro';
+import SectionIndex from '../components/SectionIndex.astro';
+import Section from '../components/Section.astro';
+import BlogCard from '../components/BlogCard.astro';
 import ExternalLink from '../components/ExternalLink.astro';
+
+const posts = await getCollection('thoughts', ({ data }) => !data.draft);
+const sortedPosts = posts
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const sections = [
+  { id: 'hero', number: '01' },
+  { id: 'about', number: '02' },
+  { id: 'experience', number: '03' },
+  { id: 'connect', number: '04' },
+];
 ---
 
 <BaseLayout title="Ray Cashmore — Product Engineer">
   <Header />
+  <SectionIndex sections={sections} />
 
   <main>
-    <!-- Hero Section -->
-    <section class="min-h-screen flex flex-col justify-center pt-20 relative overflow-hidden">
+    <!-- Section 01: Hero -->
+    <section id="hero" class="min-h-screen flex flex-col justify-center relative overflow-hidden">
       <canvas id="dot-grid" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
-      <Container class="relative z-10">
-        <h1 class="text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-none">
-          Ray Cashmore
-        </h1>
-        <p class="mt-4 text-xl md:text-2xl text-muted">
-          Product Engineer
-        </p>
-      </Container>
+      <div class="swiss-grid relative z-10">
+        <div class="col-span-full lg:col-span-4">
+          <h1 class="type-hero-name">
+            <span class="block">Ray</span>
+            <span class="block">Cashmore</span>
+          </h1>
+          <p class="type-hero-tagline text-muted mt-12">
+            <span class="block">Product</span>
+            <span class="block">Engineer</span>
+          </p>
+        </div>
+      </div>
     </section>
 
     <script>
@@ -71,10 +91,7 @@ import ExternalLink from '../components/ExternalLink.astro';
         const baseColor = dark ? '255, 255, 255' : '0, 0, 0';
 
         dots.forEach(dot => {
-          // Diagonal wave: combine x and y position
           const diagonal = (dot.x + dot.y) / 300;
-
-          // Multiple overlapping waves for organic feel
           const wave1 = Math.sin(time * 0.0008 + diagonal + dot.phase);
           const wave2 = Math.sin(time * 0.0006 - diagonal * 0.7 + dot.phase * 1.3);
           const wave3 = Math.sin(time * 0.001 + diagonal * 0.5 + dot.phase * 0.8);
@@ -95,48 +112,139 @@ import ExternalLink from '../components/ExternalLink.astro';
       window.addEventListener('resize', resize);
       animationId = requestAnimationFrame(draw);
 
-      // Watch for theme changes
-      const observer = new MutationObserver(() => {
-        // Theme changed, animation will pick up new colors on next frame
-      });
+      const observer = new MutationObserver(() => {});
       observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     </script>
 
-    <!-- Below the fold -->
-    <section class="py-24 border-t border-border">
-      <Container>
-        <div class="grid md:grid-cols-2 gap-16 md:gap-24">
-          <!-- Thoughts -->
-          <div>
-            <h2 class="text-xs font-medium text-muted uppercase tracking-widest mb-8">
-              Thoughts
-            </h2>
-            <a href="/thoughts" class="text-lg md:text-xl hover:opacity-60">
-              View all writing →
-            </a>
-          </div>
+    <!-- Section 02: About -->
+    <Section id="about" number="02" class="border-t border-border">
+      <p class="text-xl md:text-2xl leading-relaxed text-muted max-w-3xl">
+        I build products that matter. With a focus on craft and user experience,
+        I bridge the gap between design and engineering to create software that
+        feels intentional and refined.
+      </p>
+    </Section>
 
-          <!-- Links -->
-          <div>
-            <h2 class="text-xs font-medium text-muted uppercase tracking-widest mb-8">
-              Links
-            </h2>
-            <div class="space-y-4">
-              <div>
-                <a href="/cv" class="text-lg md:text-xl hover:opacity-60">
-                  Curriculum Vitae →
-                </a>
-              </div>
-              <div>
-                <ExternalLink href="https://linkedin.com/in/raycashmore" label="LinkedIn" />
-              </div>
-              <div>
-                <ExternalLink href="https://github.com/raycashmore" label="GitHub" />
-              </div>
+    <!-- Section 03: Experience -->
+    <Section id="experience" number="03" class="border-t border-border">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-6 mb-16">
+        <h2 class="type-section-title">Experience</h2>
+        <a
+          href="/ray-cashmore-cv.pdf"
+          download
+          class="inline-flex items-center gap-2 px-5 py-2.5 border border-foreground hover:bg-foreground hover:text-background transition-colors text-sm font-medium"
+        >
+          Download CV
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Experience Entries -->
+      <div class="space-y-12 mb-20">
+        <article class="grid md:grid-cols-4 gap-4 pb-12 border-b border-border">
+          <div class="text-sm text-muted">2022 — Present</div>
+          <div class="md:col-span-3">
+            <h3 class="font-medium text-lg">Senior Product Engineer</h3>
+            <p class="text-muted mt-1">Company Name</p>
+            <p class="mt-4 text-muted leading-relaxed">
+              Brief description of your role, responsibilities, and key achievements.
+              Focus on impact and outcomes.
+            </p>
+          </div>
+        </article>
+
+        <article class="grid md:grid-cols-4 gap-4 pb-12 border-b border-border">
+          <div class="text-sm text-muted">2020 — 2022</div>
+          <div class="md:col-span-3">
+            <h3 class="font-medium text-lg">Product Engineer</h3>
+            <p class="text-muted mt-1">Previous Company</p>
+            <p class="mt-4 text-muted leading-relaxed">
+              Description of previous role and accomplishments.
+            </p>
+          </div>
+        </article>
+
+        <article class="grid md:grid-cols-4 gap-4">
+          <div class="text-sm text-muted">2018 — 2020</div>
+          <div class="md:col-span-3">
+            <h3 class="font-medium text-lg">Software Engineer</h3>
+            <p class="text-muted mt-1">Earlier Company</p>
+            <p class="mt-4 text-muted leading-relaxed">
+              Earlier experience and growth trajectory.
+            </p>
+          </div>
+        </article>
+      </div>
+
+      <!-- Education -->
+      <div class="mb-20">
+        <h3 class="type-label text-muted mb-10">Education</h3>
+        <article class="grid md:grid-cols-4 gap-4">
+          <div class="text-sm text-muted">2014 — 2018</div>
+          <div class="md:col-span-3">
+            <h4 class="font-medium text-lg">BSc Computer Science</h4>
+            <p class="text-muted mt-1">University Name</p>
+          </div>
+        </article>
+      </div>
+
+      <!-- Skills -->
+      <div>
+        <h3 class="type-label text-muted mb-10">Skills</h3>
+        <div class="flex flex-wrap gap-3">
+          <span class="px-4 py-2 border border-border text-sm">TypeScript</span>
+          <span class="px-4 py-2 border border-border text-sm">React</span>
+          <span class="px-4 py-2 border border-border text-sm">Node.js</span>
+          <span class="px-4 py-2 border border-border text-sm">Python</span>
+          <span class="px-4 py-2 border border-border text-sm">PostgreSQL</span>
+          <span class="px-4 py-2 border border-border text-sm">AWS</span>
+          <span class="px-4 py-2 border border-border text-sm">Product Strategy</span>
+          <span class="px-4 py-2 border border-border text-sm">System Design</span>
+        </div>
+      </div>
+    </Section>
+
+    <!-- Section 04: Connect -->
+    <Section id="connect" number="04" class="border-t border-border">
+      <div class="grid md:grid-cols-2 gap-16 md:gap-24">
+        <!-- Thoughts -->
+        <div>
+          <h2 class="type-label text-muted mb-10">Thoughts</h2>
+          {sortedPosts.length > 0 ? (
+            <div class="space-y-8 mb-8">
+              {sortedPosts.map((post) => (
+                <BlogCard
+                  title={post.data.title}
+                  date={post.data.date}
+                  slug={post.id}
+                  excerpt={post.data.excerpt}
+                />
+              ))}
+            </div>
+          ) : (
+            <p class="text-muted mb-8">No posts yet.</p>
+          )}
+          <a href="/thoughts" class="text-lg hover:opacity-60 inline-flex items-center gap-2">
+            View all writing
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <!-- Links -->
+        <div>
+          <h2 class="type-label text-muted mb-10">Links</h2>
+          <div class="space-y-4">
+            <div>
+              <ExternalLink href="https://linkedin.com/in/raycashmore" label="LinkedIn" />
+            </div>
+            <div>
+              <ExternalLink href="https://github.com/raycashmore" label="GitHub" />
             </div>
           </div>
         </div>
-      </Container>
-    </section>
+      </div>
+    </Section>
   </main>
 </BaseLayout>
