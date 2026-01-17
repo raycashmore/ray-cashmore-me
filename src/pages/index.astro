@@ -32,9 +32,8 @@ const sections = [
             <span class="block">Ray</span>
             <span class="block">Cashmore</span>
           </h1>
-          <p class="type-hero-tagline text-muted mt-12">
-            <span class="block">Product</span>
-            <span class="block">Engineer</span>
+          <p class="type-hero-tagline mt-12">
+            <span id="cycling-title" class="block cycling-text">Product Engineer</span>
           </p>
         </div>
       </div>
@@ -107,12 +106,36 @@ const sections = [
       animationId = requestAnimationFrame(draw);
     </script>
 
+    <script>
+      const titles = [
+        'Product Engineer',
+        'Interaction Designer',
+        'Engineering Manager'
+      ];
+
+      let currentIndex = 0;
+      const cyclingElement = document.getElementById('cycling-title');
+
+      if (cyclingElement) {
+        setInterval(() => {
+          cyclingElement.classList.add('fade-out');
+
+          setTimeout(() => {
+            currentIndex = (currentIndex + 1) % titles.length;
+            cyclingElement.textContent = titles[currentIndex];
+
+            setTimeout(() => {
+              cyclingElement.classList.remove('fade-out');
+            }, 200);
+          }, 800);
+        }, 5000);
+      }
+    </script>
+
     <!-- Section 02: About -->
     <Section id="about" number="02" class="border-t border-border">
       <p class="text-xl md:text-2xl leading-relaxed text-muted max-w-3xl">
-        I build products that matter. With a focus on craft and user experience,
-        I bridge the gap between design and engineering to create software that
-        feels intentional and refined.
+        Engineering leader working at the intersection of technology, design, and product. Extensive experience leading ambitious teams in varied domains including generative AI and financial trading. Skilled in growing people, improving processes, hands-on coding, and driving organisational outcomes.
       </p>
     </Section>
 

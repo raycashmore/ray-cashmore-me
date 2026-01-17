@@ -174,7 +174,7 @@ a, button {
 /* Typography Scale */
 .type-hero-name {
   font-size: clamp(3.5rem, 11vw, 9rem);
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: -0.03em;
   line-height: 0.88;
 }
@@ -183,6 +183,16 @@ a, button {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-weight: 400;
   line-height: 1.2;
+}
+
+/* Cycling text animation */
+.cycling-text {
+  opacity: 1;
+  transition: opacity 0.8s linear;
+}
+
+.cycling-text.fade-out {
+  opacity: 0;
 }
 
 .type-section-title {
