@@ -1,0 +1,22 @@
+---
+interface Props {
+  dateRange: string;
+  role: string;
+  company: string;
+  description: string;
+  isLast?: boolean;
+}
+const { dateRange, role, company, description, isLast = false } = Astro.props;
+---
+
+<article class:list={[
+  "grid md:grid-cols-4 gap-4",
+  isLast ? "" : "pb-12 border-b border-border"
+]}>
+  <div class="text-sm text-muted">{dateRange}</div>
+  <div class="md:col-span-3">
+    <h3 class="font-medium text-lg">{role}</h3>
+    <p class="text-muted mt-1">{company}</p>
+    <p class="mt-4 text-muted leading-relaxed">{description}</p>
+  </div>
+</article>
