@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/Header.astro';
 import SectionIndex from '../components/SectionIndex.astro';
 import Section from '../components/Section.astro';
 import BlogCard from '../components/BlogCard.astro';
@@ -21,12 +20,11 @@ const sections = [
 ---
 
 <BaseLayout title="Ray Cashmore — Product Engineer">
-  <Header />
   <SectionIndex sections={sections} />
 
   <main>
     <!-- Section 01: Hero -->
-    <section id="hero" class="min-h-screen flex flex-col justify-center relative overflow-hidden">
+    <section id="hero" class="dark min-h-screen flex flex-col justify-center relative overflow-hidden bg-[rgb(0,0,0)] text-[rgb(255,255,255)]">
       <canvas id="dot-grid" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
       <div class="swiss-grid relative z-10">
         <div class="col-span-full lg:col-span-4">
@@ -53,10 +51,6 @@ const sections = [
 
       let dots: { x: number; y: number; phase: number }[] = [];
       let animationId: number;
-
-      function isDark() {
-        return document.documentElement.classList.contains('dark');
-      }
 
       function resize() {
         const dpr = window.devicePixelRatio || 1;
@@ -87,8 +81,8 @@ const sections = [
         const rect = canvas.getBoundingClientRect();
         ctx.clearRect(0, 0, rect.width, rect.height);
 
-        const dark = isDark();
-        const baseColor = dark ? '255, 255, 255' : '0, 0, 0';
+        // Hero section is always dark, so dots are always white
+        const baseColor = '255, 255, 255';
 
         dots.forEach(dot => {
           const diagonal = (dot.x + dot.y) / 300;
@@ -111,9 +105,6 @@ const sections = [
       resize();
       window.addEventListener('resize', resize);
       animationId = requestAnimationFrame(draw);
-
-      const observer = new MutationObserver(() => {});
-      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     </script>
 
     <!-- Section 02: About -->

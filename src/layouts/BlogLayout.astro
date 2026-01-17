@@ -1,6 +1,5 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import Header from '../components/Header.astro';
 import Container from '../components/Container.astro';
 
 interface Props {
@@ -17,8 +16,6 @@ const formattedDate = date.toLocaleDateString('en-US', {
 ---
 
 <BaseLayout title={`${title} — Ray Cashmore`}>
-  <Header />
-
   <main class="pt-32 pb-24">
     <Container>
       <article>
