@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionIndex from '../components/SectionIndex.astro';
 import Section from '../components/Section.astro';
-import BlogCard from '../components/BlogCard.astro';
 import ExternalLink from '../components/ExternalLink.astro';
 import ExperienceEntry from '../components/ExperienceEntry.astro';
 
@@ -217,7 +216,7 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
     <!-- Section 04: Connect -->
     <Section id="connect" number="04" class="border-t border-border">
       <div class="grid md:grid-cols-2 gap-16 md:gap-24">
-        <!-- Thoughts -->
+        <!-- Thoughts (hidden for now)
         <div>
           <h2 class="type-label text-muted mb-10">Thoughts</h2>
           {sortedPosts.length > 0 ? (
@@ -239,6 +238,7 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
             <span aria-hidden="true">→</span>
           </a>
         </div>
+        -->
 
         <!-- Links -->
         <div>
@@ -250,9 +250,31 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
             <div>
               <ExternalLink href="https://github.com/raycashmore" label="GitHub" />
             </div>
+            <div>
+              <a
+                href="#"
+                id="email-link"
+                class="inline-flex items-center gap-2 text-foreground hover:opacity-60"
+                data-u="ray"
+                data-d="cashmore.me"
+              >Email</a>
+            </div>
           </div>
         </div>
       </div>
     </Section>
   </main>
 </BaseLayout>
+
+<script>
+  // Obfuscated email to prevent spam bots
+  const emailLink = document.getElementById('email-link');
+  if (emailLink) {
+    emailLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const u = emailLink.getAttribute('data-u');
+      const d = emailLink.getAttribute('data-d');
+      window.location.href = 'mailto:' + u + '@' + d;
+    });
+  }
+</script>
