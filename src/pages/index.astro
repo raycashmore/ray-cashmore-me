@@ -18,25 +18,25 @@ const experiences = [
     dateRange: "Jul 2024 — Present",
     role: "Solutions Engineer",
     company: "HERE (OpenFin)",
-    description: "Growing the Asia-Pac region by forging technical pre and post-sales relationships. Collaborating with sales, engineering, product, and customer success teams to ensure successful implementations of the HERE Enterprise Browser. On-site consulting and hands-on engineering for a forthcoming, groundbreaking desktop platform at a major Australian institution."
+    description: "Driving adoption of the HERE Enterprise Browser across the Asia-Pacific region. Forward deployed engineer at a major Australian financial institution, bridging product, engineering, and customer success to deliver successful implementations."
   },
   {
     dateRange: "Jan 2024 — Jul 2024",
     role: "Senior Software Engineer",
     company: "Leonardo.Ai",
-    description: "Software engineering and thought leadership at Australia's leading hyper-growth AI startup. Led the build of the flagship Image Generation v2 interface and contributed to key features like the Universal Upscaler during a pivotal growth phase. Improved delivery cadence, contributed to extensive hiring, and coached the team on scale-up delivery best practices."
+    description: "Joined Australia's fastest-growing AI startup and led the development of the Image Generation v2 interface and contributed to key features like the Universal Upscaler during a pivotal growth phase - just prior to acquisition by Canva. Improved delivery cadence, contributed to extensive hiring, and coached the team on engineering best practices."
   },
   {
     dateRange: "Jan 2020 — Sep 2023",
     role: "Head of UI / UX",
     company: "Yieldbroker",
-    description: "Owned discovery and delivery of a high-performance financial trading platform, combining hands-on software engineering, UX design, and people management. Led chapter for all UI engineers through hiring, mentoring, and coaching. Worked closely with the CTO on organisational design. Established and led UX design practice with rapid prototypes, high-fidelity designs, and design systems in Figma."
+    description: "Spearheaded a complete rebuild of a fixed income trading platform that underpins the Australian financial industry. Built and led a high-performing UI/UX team, owned end-to-end discovery and delivery, and collaborated with the CTO to transition the organisation toward a product operating model."
   },
   {
     dateRange: "Mar 2010 — Dec 2019",
     role: "Senior Software Engineer",
     company: "Lab49",
-    description: "Go-to specialist for high-performance financial trading UIs across major institutions. Worked on commodities trading at Commonwealth Bank, leading the multi-year build of a new metals trading platform. Developed rich UIs for foreign exchange trading at NAB, fixed income at UBS, and contributed to the Matrix platform at Morgan Stanley. Expertise in streaming data, data grids, visualisations, and compliance-heavy environments."
+    description: "Go-to specialist for innovative trading platforms at major financial institutions across APAC, US, and Europe. Specialised in streaming data, real-time visualisation, and mission-critical interfaces."
   }
 ];
 
@@ -45,7 +45,7 @@ const earlyCareer = [
   { role: "Razorfish, R/GA, Cimex", description: "Freelance roles at London's top digital agencies" },
   { role: "Doof", description: "Early employee at hyper-growth online gaming startup" },
   { role: "Catalyst, Learning Curve, Nortia", description: "Developed interactive E-Learning platforms" },
-  { role: "Art Direction", description: "Introduced data driven websites to highly creative print-based design agency" }
+  { role: "Art Direction", description: "Introduced data-driven websites to highly creative print-based design agency" }
 ];
 
 const skillCategories = [
@@ -53,7 +53,7 @@ const skillCategories = [
   { title: "Back-end", skills: ["Node", "tRPC", "Drizzle", "REST", "NestJS", "GraphQL", "Postgres", "PayloadCMS"] },
   { title: "Mobile", skills: ["React Native", "Expo"] },
   { title: "Testing & Cloud", skills: ["Cypress", "Puppeteer", "Cucumber", "Playwright", "AWS", "Vercel", "Clerk", "Railway", "Convex"] },
-  { title: "AI & Developer Tools", skills: ["MCP", "OpenAI API", "Ollama", "Claude Code", "Gemini CLI", "V0", "Bolt", "Lovable", "n8n"] },
+  { title: "AI & Developer Tools", skills: ["MCP", "Ollama", "Claude Code", "OpenCode", "V0", "Bolt", "Lovable", "n8n"] },
   { title: "Engineering Management", skills: ["Hiring", "Mentoring", "Code reviews", "DORA metrics", "Team Topologies", "Flow metrics", "Continuous delivery", "Scrum", "Lean/Kanban"] },
   { title: "User Experience Design", skills: ["Prototyping", "Journey mapping", "Personas", "One-pagers", "Interaction design", "Story mapping", "Design systems", "Figma", "Sketch", "Zeplin", "Axure"] },
   { title: "Product Management", skills: ["Product roadmaps", "Requirements gathering", "OKRs", "Stakeholder collaboration", "Pre-sales consulting"] },
@@ -120,7 +120,6 @@ const skillCategories = [
         const rect = canvas.getBoundingClientRect();
         ctx.clearRect(0, 0, rect.width, rect.height);
 
-        // Hero section is always dark, so dots are always white
         const baseColor = '255, 255, 255';
 
         dots.forEach(dot => {
@@ -150,7 +149,8 @@ const skillCategories = [
       const titles = [
         'Product Engineer',
         'Interaction Designer',
-        'Engineering Manager'
+        'Engineering Manager',
+        'AI Fiddler'
       ];
 
       let currentIndex = 0;
@@ -204,22 +204,19 @@ const skillCategories = [
 
       <!-- Early Career Highlights -->
       <div class="mb-20 pt-12 border-t border-border">
-        <h3 class="type-label text-muted mb-6">Early Career Highlights</h3>
-        <div class="space-y-3">
-          {earlyCareer.map((item) => (
-            <div class="flex md:grid md:grid-cols-4 md:gap-4">
-              <div class="hidden md:block"></div>
-              <div class="md:col-span-3">
-                <p class="text-sm"><span class="font-medium">{item.role}</span> — <span class="text-muted">{item.description}</span></p>
-              </div>
-            </div>
-          ))}
+        <div class="grid md:grid-cols-4 gap-4">
+          <div class="text-sm text-muted">Early Career Highlights</div>
+          <div class="md:col-span-3 space-y-3">
+            {earlyCareer.map((item) => (
+              <p class="text-sm"><span class="font-medium">{item.role}</span> — <span class="text-muted">{item.description}</span></p>
+            ))}
+          </div>
         </div>
       </div>
 
       <!-- Skills -->
       <div>
-        <h3 class="type-label text-muted mb-10">Skills</h3>
+        <h3 class="type-label text-muted mb-10">Core Skills</h3>
         {skillCategories.map(category => (
           <SkillCategory title={category.title} skills={category.skills} />
         ))}

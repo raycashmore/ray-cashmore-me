@@ -180,7 +180,7 @@ a, button {
 /* Typography Scale */
 .type-hero-name {
   font-size: clamp(3.5rem, 12vw, 10rem);
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.04em;
   line-height: 0.85;
 }
