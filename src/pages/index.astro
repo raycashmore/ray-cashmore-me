@@ -5,7 +5,6 @@ import SectionIndex from '../components/SectionIndex.astro';
 import Section from '../components/Section.astro';
 import BlogCard from '../components/BlogCard.astro';
 import ExternalLink from '../components/ExternalLink.astro';
-import SkillCategory from '../components/SkillCategory.astro';
 import ExperienceEntry from '../components/ExperienceEntry.astro';
 
 const posts = await getCollection('thoughts', ({ data }) => !data.draft);
@@ -15,7 +14,7 @@ const sortedPosts = posts
 
 const experiences = [
   {
-    dateRange: "Jul 2024 — Present",
+    dateRange: "Jul 2024 — Now",
     role: "Solutions Engineer",
     company: "HERE (OpenFin)",
     description: "Driving adoption of the HERE Enterprise Browser across the Asia-Pacific region. Forward deployed engineer at a major Australian financial institution, bridging product, engineering, and customer success to deliver successful implementations."
@@ -48,17 +47,7 @@ const earlyCareer = [
   { role: "Art Direction", description: "Introduced data-driven websites to highly creative print-based design agency" }
 ];
 
-const skillCategories = [
-  { title: "Front-end", skills: ["TypeScript", "React", "Next.js", "TanStack", "XState", "Angular", "RxJS", "Storybook", "SvelteKit", "Tailwind"] },
-  { title: "Back-end", skills: ["Node", "tRPC", "Drizzle", "REST", "NestJS", "GraphQL", "Postgres", "PayloadCMS"] },
-  { title: "Mobile", skills: ["React Native", "Expo"] },
-  { title: "Testing & Cloud", skills: ["Cypress", "Puppeteer", "Cucumber", "Playwright", "AWS", "Vercel", "Clerk", "Railway", "Convex"] },
-  { title: "AI & Developer Tools", skills: ["MCP", "Ollama", "Claude Code", "OpenCode", "V0", "Bolt", "Lovable", "n8n"] },
-  { title: "Engineering Management", skills: ["Hiring", "Mentoring", "Code reviews", "DORA metrics", "Team Topologies", "Flow metrics", "Continuous delivery", "Scrum", "Lean/Kanban"] },
-  { title: "User Experience Design", skills: ["Prototyping", "Journey mapping", "Personas", "One-pagers", "Interaction design", "Story mapping", "Design systems", "Figma", "Sketch", "Zeplin", "Axure"] },
-  { title: "Product Management", skills: ["Product roadmaps", "Requirements gathering", "OKRs", "Stakeholder collaboration", "Pre-sales consulting"] },
-  { title: "Domain Knowledge", skills: ["Foreign exchange", "Fixed income", "Commodities", "Regulation", "Image generation", "Developer productivity"] }
-];
+const coreSkills = ["TypeScript", "React", "AI-driven development", "Product design", "Engineering management", "Pre-sales"];
 ---
 
 <BaseLayout title="Ray Cashmore — Product Engineer">
@@ -205,7 +194,7 @@ const skillCategories = [
       <!-- Early Career Highlights -->
       <div class="mb-20 pt-12 border-t border-border">
         <div class="grid md:grid-cols-4 gap-4">
-          <div class="text-sm text-muted">Early Career Highlights</div>
+          <div class="text-sm text-muted">Early career highlights</div>
           <div class="md:col-span-3 space-y-3">
             {earlyCareer.map((item) => (
               <p class="text-sm"><span class="font-medium">{item.role}</span> — <span class="text-muted">{item.description}</span></p>
@@ -217,9 +206,11 @@ const skillCategories = [
       <!-- Skills -->
       <div>
         <h3 class="type-label text-muted mb-10">Core Skills</h3>
-        {skillCategories.map(category => (
-          <SkillCategory title={category.title} skills={category.skills} />
-        ))}
+        <div class="flex flex-wrap gap-3">
+          {coreSkills.map(skill => (
+            <span class="px-4 py-2 border border-border text-sm">{skill}</span>
+          ))}
+        </div>
       </div>
     </Section>
 
