@@ -22,6 +22,7 @@
     "@tanstack/ai-react": "^0.2.2",
     "astro": "^5.16.8",
     "dotenv": "^17.2.3",
+    "openai": "^6.16.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "tailwindcss": "^4.1.18",
