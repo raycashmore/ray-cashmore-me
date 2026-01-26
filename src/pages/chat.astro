@@ -1,6 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Chat from '../components/Chat.tsx';
+import { getFeatureFlag } from '../lib/launchdarkly';
+
+export const prerender = false;
+
+const isChatEnabled = await getFeatureFlag('ai-chat', false);
+
+if (!isChatEnabled) {
+  return Astro.redirect('/', 307);
+}
 ---
 
 <BaseLayout title="Chat">
