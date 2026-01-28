@@ -1,9 +1,16 @@
 [
   {
     "id": "identity-001",
-    "content": "I'm Ray Cashmore, a product engineer, designer, and leader based in Australia. I work at the intersection of technology, design, and product. I have extensive experience leading ambitious teams in varied domains including generative AI and financial trading. I'm skilled in growing people, improving processes, hands-on coding, and driving organisational outcomes. You can find my portfolio at ray.cashmore.me.",
+    "content": "I'm Ray Cashmore, a product engineer, designer, and leader based in Sydney Australia. I work at the intersection of technology, design, and product. I have extensive experience leading ambitious teams in varied domains including generative AI and financial trading. I'm skilled in growing people, improving processes, hands-on coding, and driving organisational outcomes. You can find my portfolio at ray.cashmore.me.",
     "type": "identity",
     "topics": ["introduction", "overview", "who"],
+    "confidence": "high"
+  },
+   {
+    "id": "location-001",
+    "content": "I'm based in Sydney, Australia. Currently, I work remotely with teams in the UK and US. I worked in London for over 5 years, and also lived and worked in Vancouver Canada.",
+    "type": "identity",
+    "topics": ["location", "where"],
     "confidence": "high"
   },
   {
@@ -43,14 +50,14 @@
   },
   {
     "id": "skills-frontend-001",
-    "content": "My primary technical skills are in front-end development. I'm highly proficient in TypeScript, React, Next.js, TanStack, XState, Angular, RxJS, Storybook, SvelteKit, and Tailwind CSS. For back-end work, I use Node, Deno, Docker, tRPC, Drizzle, REST, NestJS, GraphQL, Postgres, and PayloadCMS. I also have experience with mobile development using React Native and Expo, and automated testing with Cypress, Puppeteer, Cucumber, Playwright, and Selenium.",
+    "content": "My primary technical skills are in front-end development. I'm highly proficient in TypeScript, React, Next.js, TanStack, XState, Angular, RxJS, Storybook, SvelteKit, and Tailwind CSS (as well as many others over the years). For back-end work, I use Node, Deno, Docker, tRPC, Drizzle, REST, NestJS, GraphQL, Postgres, and PayloadCMS.",
     "type": "skills",
     "topics": ["skills", "typescript", "react", "frontend", "backend", "testing"],
     "confidence": "high"
   },
   {
     "id": "skills-ai-001",
-    "content": "I have hands-on experience with AI tools and technologies. This includes MCP (Model Context Protocol), n8n for automation, whisper for speech recognition, Ollama for local models, Claude Code, Gemini CLI, and AI-assisted development tools like V0, Bolt, and Lovable. My domain knowledge in AI covers image generation and developer productivity applications.",
+    "content": "I have hands-on experience with AI tools and technologies. This includes MCP, n8n for automation, whisper for speech recognition, Ollama for local models, Claude Code, OpenCode, Gemini CLI, and AI-assisted design tools like V0, Bolt, and Lovable.",
     "type": "skills",
     "topics": ["ai", "skills", "mcp", "claude", "image generation", "automation"],
     "confidence": "high"
@@ -64,14 +71,14 @@
   },
   {
     "id": "contact-001",
-    "content": "You can reach me via email at ray@cashmore.me. My portfolio website is ray.cashmore.me. I'm also on LinkedIn at linkedin.com/in/raycashmore and GitHub at github.com/raycashmore. For a more detailed profile, visit my Notion page at raycashmore.notion.site.",
+    "content": "You can reach me via email at ray@cashmore.me. My portfolio website is ray.cashmore.me. I'm also on LinkedIn at linkedin.com/in/raycashmore and GitHub at github.com/raycashmore. For a more detailed profile, visit my Notion page by clicking on the Full Profile link in my portfolio.",
     "type": "contact",
     "topics": ["contact", "email", "linkedin", "github", "reach"],
     "confidence": "high"
   },
   {
     "id": "education-001",
-    "content": "I hold a Bachelor of Information Technology with a minor in Marketing from the University of Canberra. I completed my Senior Secondary Certificate (High School) at Marist College.",
+    "content": "I hold a Bachelor of Information Technology with a minor in Marketing from the University of Canberra.",
     "type": "identity",
     "topics": ["education", "university", "degree", "study"],
     "confidence": "high"
