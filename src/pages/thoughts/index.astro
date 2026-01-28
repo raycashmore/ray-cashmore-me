@@ -3,6 +3,12 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Container from '../../components/Container.astro';
 import BlogCard from '../../components/BlogCard.astro';
+import { getFeatureFlag } from '../../lib/launchdarkly';
+
+const enableThoughts = await getFeatureFlag('enable-thoughts', false);
+if (!enableThoughts) {
+  return Astro.redirect('/');
+}
 
 const posts = await getCollection('thoughts', ({ data }) => !data.draft);
 const sortedPosts = posts.sort((a, b) =>
