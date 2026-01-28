@@ -9,25 +9,46 @@ export default function Chat() {
   });
 
   return (
-    <div className="flex flex-col gap-4 max-w-2xl mx-auto p-4">
-      <div className="flex flex-col gap-2 min-h-[300px] overflow-y-auto">
+    <div className="flex flex-col gap-8">
+      {/* Messages area */}
+      <div className="flex flex-col gap-6 min-h-[400px]">
+        {messages.length === 0 && !isLoading && (
+          <div className="text-muted text-sm">
+            <p className="uppercase tracking-widest text-xs mb-2">No messages yet</p>
+            <p>Start a conversation by typing below.</p>
+          </div>
+        )}
+
         {messages.map((msg, i) => (
           <div
             key={i}
-            className={`p-3 rounded-lg ${
+            className={`pl-4 ${
               msg.role === 'user'
-                ? 'bg-blue-100 dark:bg-blue-900 ml-auto'
-                : 'bg-gray-100 dark:bg-gray-800'
+                ? 'border-l-2 border-foreground sm:w-3/5'
+                : 'border-l border-border sm:w-4/5'
             }`}
           >
-            {msg.parts
-              .filter((part): part is { type: 'text'; content: string } => part.type === 'text')
-              .map((part) => part.content)
-              .join('')}
+            <span className="uppercase tracking-widest text-xs text-muted block mb-1">
+              {msg.role === 'user' ? 'You' : 'Ray'}
+            </span>
+            <p className={msg.role === 'user' ? 'text-foreground' : 'text-muted'}>
+              {msg.parts
+                .filter((part): part is { type: 'text'; content: string } => part.type === 'text')
+                .map((part) => part.content)
+                .join('')}
+            </p>
           </div>
         ))}
+
+        {isLoading && (
+          <div className="border-l border-border pl-4 sm:w-4/5">
+            <span className="uppercase tracking-widest text-xs text-muted block mb-1">Ray</span>
+            <p className="text-muted animate-pulse">Thinking...</p>
+          </div>
+        )}
       </div>
 
+      {/* Input form */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -36,20 +57,20 @@ export default function Chat() {
             setInput('');
           }
         }}
-        className="flex gap-2"
+        className="flex flex-col sm:flex-row gap-4"
       >
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask me anything..."
-          className="flex-1 p-2 border rounded-lg"
+          className="flex-1 bg-transparent border-b border-border py-2 text-foreground placeholder:text-muted focus:outline-none focus:border-foreground transition-colors"
           disabled={isLoading}
         />
         <button
           type="submit"
           disabled={isLoading}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50"
+          className="uppercase tracking-widest text-xs border border-foreground px-6 py-2 text-foreground hover:bg-foreground hover:text-background transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Send
         </button>
