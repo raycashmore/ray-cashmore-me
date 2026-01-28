@@ -1,0 +1,43 @@
+---
+interface Props {
+  text: string;
+  href: string;
+}
+
+const { text, href } = Astro.props;
+---
+
+<div class="fixed top-4 left-0 right-0 z-50 flex justify-center pointer-events-none">
+  <a
+    href={href}
+    class="announcement-bar group pointer-events-auto flex items-center gap-2 px-5 py-2.5 text-sm font-medium tracking-wide rounded-full"
+  >
+    <span class="announcement-text text-center">{text}</span>
+    <svg
+      class="w-4 h-4 transition-transform group-hover:translate-x-1"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path d="M5 12h14M12 5l7 7-7 7" />
+    </svg>
+  </a>
+</div>
+
+<style>
+  .announcement-bar {
+    background-color: black;
+    color: white;
+  }
+
+  :global(.dark) .announcement-bar {
+    background-color: white;
+    color: black;
+  }
+
+  .announcement-text {
+    color: white;
+    mix-blend-mode: difference;
+  }
+</style>

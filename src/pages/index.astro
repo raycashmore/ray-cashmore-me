@@ -5,6 +5,7 @@ import SectionIndex from '../components/SectionIndex.astro';
 import Section from '../components/Section.astro';
 import ExternalLink from '../components/ExternalLink.astro';
 import ExperienceEntry from '../components/ExperienceEntry.astro';
+import AnnouncementBar from '../components/AnnouncementBar.astro';
 
 const posts = await getCollection('thoughts', ({ data }) => !data.draft);
 const sortedPosts = posts
@@ -53,6 +54,11 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
   <SectionIndex />
 
   <main>
+    <AnnouncementBar
+      text="Ask artificial Ray about his skills and experience"
+      href="/chat"
+    />
+
     <!-- Section 01: Hero -->
     <section id="hero" class="dark min-h-screen flex flex-col justify-end pb-[12vh] lg:pb-[15vh] relative overflow-hidden bg-[rgb(0,0,0)] text-[rgb(255,255,255)]">
       <canvas id="dot-grid" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
