@@ -10,6 +10,7 @@ import BlogCard from '../components/BlogCard.astro';
 import { getFeatureFlag } from '../lib/launchdarkly';
 
 const enableThoughts = await getFeatureFlag('enable-thoughts', false);
+const enableAiChat = await getFeatureFlag('ai-chat', false);
 
 const posts = await getCollection('thoughts', ({ data }) => !data.draft);
 const sortedPosts = posts
@@ -58,10 +59,12 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
   <SectionIndex />
 
   <main>
-    <AnnouncementBar
-      text="Ask artificial Ray about his skills and experience"
-      href="/chat"
-    />
+{enableAiChat && (
+      <AnnouncementBar
+        text="Ask artificial Ray about his skills and experience"
+        href="/chat"
+      />
+    )}
 
     <!-- Section 01: Hero -->
     <section id="hero" class="dark min-h-screen flex flex-col justify-end pb-[12vh] lg:pb-[15vh] relative overflow-hidden bg-[rgb(0,0,0)] text-[rgb(255,255,255)]">
