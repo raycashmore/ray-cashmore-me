@@ -33,7 +33,7 @@ export default function Chat() {
             }`}
           >
             <span className="uppercase tracking-widest text-[10px] sm:text-xs text-muted block mb-0.5 sm:mb-1">
-              {msg.role === 'user' ? 'You' : 'Ray'}
+              {msg.role === 'user' ? 'You' : 'Ray Bot'}
             </span>
             <p className={`text-sm sm:text-base ${msg.role === 'user' ? 'text-foreground' : 'text-muted'}`}>
               {msg.parts
@@ -46,7 +46,7 @@ export default function Chat() {
 
         {isLoading && (
           <div className="border-l border-border pl-3 sm:pl-4 sm:w-4/5">
-            <span className="uppercase tracking-widest text-[10px] sm:text-xs text-muted block mb-0.5 sm:mb-1">Ray</span>
+            <span className="uppercase tracking-widest text-[10px] sm:text-xs text-muted block mb-0.5 sm:mb-1">Ray Bot</span>
             <p className="text-sm sm:text-base text-muted animate-pulse">Thinking...</p>
           </div>
         )}

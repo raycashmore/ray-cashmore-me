@@ -1,72 +1,212 @@
 [
   {
     "id": "identity-001",
-    "content": "I'm Ray Cashmore, a product engineer, designer, and leader based in Sydney Australia. I work at the intersection of technology, design, and product. I have extensive experience leading ambitious teams in varied domains including generative AI and financial trading. I'm skilled in growing people, improving processes, hands-on coding, and driving organisational outcomes. You can find my portfolio at ray.cashmore.me.",
+    "content": "I'm Ray Cashmore, a product engineer, designer, and leader based in Sydney, Australia. I work at the intersection of technology, design, and product. I'm not a typical software engineer - I'm a product engineer, meaning I focus on building the right thing over building the thing right. I always question whether it's the right problem to be solving, right now. I have extensive experience leading ambitious teams in varied domains including generative AI and financial trading. You can find my portfolio at ray.cashmore.me.",
     "type": "identity",
-    "topics": ["introduction", "overview", "who"],
+    "topics": ["introduction", "overview", "who", "product engineer"],
     "confidence": "high"
   },
-   {
-    "id": "location-001",
-    "content": "I'm based in Sydney, Australia. Currently, I work remotely with teams in the UK and US. I worked in London for over 5 years, and also lived and worked in Vancouver Canada.",
+  {
+    "id": "identity-002",
+    "content": "I am the bridge between engineering, product, and design. I can take part in product discovery and then get the thing built. Traditionally, the boundaries between disciplines were well defined - designers, managers, engineers speaking different languages with different incentives. But I aim to be one of the rare engineers who can bridge that gap. I can translate ideas directly into production code.",
     "type": "identity",
-    "topics": ["location", "where"],
+    "topics": ["philosophy", "bridge", "product", "design", "engineering"],
+    "confidence": "high"
+  },
+  {
+    "id": "location-001",
+    "content": "I'm based in Sydney, Australia. Currently, I work remotely with teams in the UK and US. I worked in London for over 5 years, and also lived and worked in Vancouver, Canada. I took my interactive web skills to Vancouver and then to London, where I freelanced at many of the coolest media agencies of the day.",
+    "type": "identity",
+    "topics": ["location", "where", "london", "vancouver", "sydney"],
     "confidence": "high"
   },
   {
     "id": "exp-here-001",
-    "content": "Since July 2024, I've been working as a Solutions Engineer at HERE (OpenFin). I drive adoption of the HERE Enterprise Browser across the Asia-Pacific region, bridging product, engineering, and customer success. I'm currently a Forward Deployed Engineer at a major Australian financial institution, doing hands-on React and TypeScript engineering for a groundbreaking desktop platform. I work closely with customer development teams to increase adoption of the platform SDK and advise senior executives on industry trends to shape their desktop modernisation strategy.",
+    "content": "Since July 2024, I've been working as a Solutions Engineer at HERE (previously known as OpenFin). HERE Enterprise Browser is a web browser built specifically for the enterprise. At a time when the browser wars have reignited around AI, it's an exciting space to be innovating in. My mission is to grow the Asia-Pacific region by providing pre- and post-sales technical advice to customers about their desktop modernisation strategy.",
     "type": "experience",
     "topics": ["current", "here", "openfin", "solutions engineer", "enterprise browser"],
     "confidence": "high"
   },
   {
-    "id": "exp-leonardo-001",
-    "content": "From January to July 2024, I was a Senior Software Engineer at Leonardo.AI, Australia's leading hyper-growth AI startup. I led the build of the flagship Image Generation v2 interface and contributed to key features like the Universal Upscaler during a pivotal growth phase just prior to the acquisition by Canva. I built with Next.js, React, XState, and GraphQL, working with rapidly evolving AI image generation models. I also improved delivery cadence, contributed to extensive hiring, and coached the team on scale-up best practices.",
+    "id": "exp-here-002",
+    "content": "In my Solutions Engineer role at HERE, I go on-site to help development teams understand the product and implement custom solutions. I answer a broad range of technical questions from customers about authentication, security controls, search, and AI integration. I feed pain points back to internal product and engineering teams to shape the product's future. I also sell the product to executives.",
     "type": "experience",
-    "topics": ["leonardo", "ai", "startup", "image generation", "canva"],
+    "topics": ["here", "openfin", "solutions engineer", "consulting", "enterprise"],
+    "confidence": "high"
+  },
+  {
+    "id": "exp-here-003",
+    "content": "At HERE, I've been embedded with a development team in one of Australia's largest financial organisations. It's a groundbreaking project to unite many of their platforms into one cohesive interface. I've been involved in both hands-on React and TypeScript building and high-level technical architecture. As a US-based mature startup, HERE is a great mix of innovative product work and on-the-ground client relationships.",
+    "type": "experience",
+    "topics": ["here", "openfin", "forward deployed", "react", "typescript", "architecture"],
+    "confidence": "high"
+  },
+  {
+    "id": "exp-leonardo-001",
+    "content": "From January to July 2024, I was a Senior Software Engineer at Leonardo.AI, Australia's leading hyper-growth AI startup. I joined Leonardo as a career reset - to get involved in startups and see up close how a proper consumer product company operates. I initially helped with the launch of the Universal Upscaler tool, which impressed, and was soon earmarked for the most important project at the time.",
+    "type": "experience",
+    "topics": ["leonardo", "ai", "startup", "image generation"],
+    "confidence": "high"
+  },
+  {
+    "id": "exp-leonardo-002",
+    "content": "At Leonardo.AI, I led the build of Image Gen v2, which would dramatically change the way 15 million daily users used the product - a make-or-break initiative at a time when Series B funding was not yet secured. I, along with another young engineer, managed to build the v2 interface at rapid pace without compromising on quality. It still stands, mostly unchanged, today. Shortly after it launched, Leonardo was acquired by Canva - I'd like to think my efforts helped secure that deal.",
+    "type": "experience",
+    "topics": ["leonardo", "ai", "image generation", "canva", "acquisition", "startup"],
+    "confidence": "high"
+  },
+  {
+    "id": "exp-leonardo-003",
+    "content": "At Leonardo.AI, I built with Next.js, React, XState, and GraphQL, working with rapidly evolving AI image generation models. I improved delivery cadence, contributed to extensive hiring, and coached the team on scale-up best practices. I'm extremely proud of the sheer quantity of code produced, the impact it had, the quality bar I maintained, and the younger team members I helped hire and guide.",
+    "type": "experience",
+    "topics": ["leonardo", "nextjs", "react", "xstate", "graphql", "mentoring"],
     "confidence": "high"
   },
   {
     "id": "exp-yieldbroker-001",
-    "content": "From January 2020 to September 2023, I was Head of UI/UX at Yieldbroker. I led discovery, delivery, and UX design of a high-performance financial trading platform that underpins the Australian financial industry. My role combined hands-on software engineering, UX design, and people management. As an engineering manager, I was chapter lead for all UI engineers, handling hiring, mentoring, and coaching. I worked closely with the CTO on organisational design for six teams with over 35 developers, and led agile adoption and a shift to product-led thinking.",
+    "content": "From January 2020 to September 2023, I was Head of UI/UX at Yieldbroker. This was my career-defining role so far. Yieldbroker was the trading venue where the majority of bonds and other fixed income securities were traded in Australia. Billions of dollars flowed through an aging desktop platform. I led a multi-year tech refresh effort to completely rebuild the user interface from scratch.",
     "type": "experience",
-    "topics": ["yieldbroker", "trading", "finance", "head of ui", "management", "ux"],
+    "topics": ["yieldbroker", "trading", "finance", "head of ui", "bonds", "fixed income"],
+    "confidence": "high"
+  },
+  {
+    "id": "exp-yieldbroker-002",
+    "content": "At Yieldbroker, I became a people leader for the UI engineers. Three months after starting, we all went into Covid lockdown. As a new leader, I could not have faced a more challenging situation. I learned a hell of a lot about how to be a people manager during this time. I assembled perhaps the best Angular developers in Sydney, developed a sense for talent through interviewing and working with recruiters, and learned how to create a high-performing team.",
+    "type": "experience",
+    "topics": ["yieldbroker", "management", "leadership", "hiring", "team building", "covid"],
+    "confidence": "high"
+  },
+  {
+    "id": "exp-yieldbroker-003",
+    "content": "At Yieldbroker, I established the UX design practice from scratch. There were no designers when I joined. I learned through trial and error what it takes to iterate with prototypes, get feedback, and observe users in the wild. I handled discovery work like prototyping, journey mapping, personas, and one-pagers, as well as delivery work including interaction design, story mapping, and design systems.",
+    "type": "experience",
+    "topics": ["yieldbroker", "ux", "design", "prototyping", "user research"],
+    "confidence": "high"
+  },
+  {
+    "id": "exp-yieldbroker-004",
+    "content": "At Yieldbroker, building a high-performance, real-time financial trading platform is, in my opinion, the pinnacle of front-end software engineering. Data streams constantly, the interface must be bug-free - traders don't forgive rounding errors - and it has to evolve and be maintained over years while meeting strict compliance regulations. The platform was built in Angular and RxJS as a modular platform loaded into a desktop container.",
+    "type": "experience",
+    "topics": ["yieldbroker", "angular", "rxjs", "trading", "real-time", "performance"],
+    "confidence": "high"
+  },
+  {
+    "id": "exp-yieldbroker-005",
+    "content": "At Yieldbroker, I worked closely with the CTO on organisational design for six teams with over 35 developers. I explored re-purposing project managers and business analysts as Product Managers, advocating for a shift from the Project model to a Product operating model. I got first-hand experience as a change agent - advocating for ways of working, testing what worked, and learning how messy it can be to shift a culture.",
+    "type": "experience",
+    "topics": ["yieldbroker", "org design", "cto", "product management", "agile", "transformation"],
+    "confidence": "high"
+  },
+  {
+    "id": "exp-yieldbroker-006",
+    "content": "As part of the Yieldbroker leadership team, I helped prepare for the acquisition by a large international competitor. Unfortunately, when the deal was announced, the majority of the local staff were laid off, including me.",
+    "type": "experience",
+    "topics": ["yieldbroker", "acquisition", "leadership", "management"],
     "confidence": "high"
   },
   {
     "id": "exp-lab49-001",
-    "content": "From March 2010 to December 2019, I was a Senior Software Engineer at Lab49, consulting for leading financial institutions on innovative projects. I specialised in high-performance UI for financial trading apps including streaming data, data grids, and visualisations with strict compliance and security constraints. I worked with major banks including UBS (on the Neo single dealer platform), Morgan Stanley (as UI tech lead on Matrix), Commonwealth Bank (commodities trading, sales dealer dashboard, client onboarding, and compliance systems), and National Australia Bank (lead JavaScript developer on real-time FX trading).",
+    "content": "From March 2010 to December 2019, I spent almost 10 years at Lab49 across London and Sydney, a specialist consulting firm known for its work in financial services. I specialised in high-performance UI for financial trading apps including streaming data, data grids, and visualisations with strict compliance and security constraints. Despite the long tenure, it really was four or five different roles.",
     "type": "experience",
-    "topics": ["lab49", "consulting", "finance", "trading", "ubs", "morgan stanley", "commbank", "nab"],
+    "topics": ["lab49", "consulting", "finance", "trading", "london", "sydney"],
+    "confidence": "high"
+  },
+  {
+    "id": "exp-lab49-002",
+    "content": "My big break into finance came with Morgan Stanley, which built Matrix, the first Single Dealer Platform of its scale. I was UI tech lead on Matrix, overseeing expansion of content and research features that became key to the platform's success. Soon after came UBS Neo, which was bigger and better in every way, and assembled the dream team of engineers working in finance. This was at a time when banking was where the innovation was, particularly in pre-GFC London.",
+    "type": "experience",
+    "topics": ["lab49", "morgan stanley", "matrix", "ubs", "neo", "single dealer platform"],
+    "confidence": "high"
+  },
+  {
+    "id": "exp-lab49-003",
+    "content": "At Lab49, I worked with major Australian banks including Commonwealth Bank on commodities trading, sales dealer dashboards, client onboarding, and compliance systems. I was lead JavaScript developer at National Australia Bank on their real-time foreign exchange trading platform, collaborating across time zones in a large, distributed engineering effort. Trading platforms had to handle a firehose of data, requiring a specialist skillset.",
+    "type": "experience",
+    "topics": ["lab49", "commbank", "nab", "commodities", "forex", "fx", "trading"],
     "confidence": "high"
   },
   {
     "id": "exp-early-001",
-    "content": "Earlier in my career, I worked at Adobe Consulting where I built an exclusive social network for the World Economic Forum. I did freelance work at top London digital agencies including Razorfish, R/GA, and Cimex. I was an early employee at Doof, a hyper-growth online gaming startup. I also developed interactive E-Learning platforms at Catalyst Interactive, Learning Curve, and Nortia Technologies, and introduced data-driven websites at a highly creative print-based design agency called Art Direction.",
+    "content": "Earlier in my career, I was drawn to interactive user experiences on the web. At Adobe Consulting, I built an exclusive social media application for the World Economic Forum - some of the world's highest profile bureaucrats using an app I helped build. I freelanced at top London digital agencies including Razorfish, R/GA, and Cimex.",
     "type": "experience",
-    "topics": ["early career", "adobe", "razorfish", "gaming", "elearning"],
+    "topics": ["early career", "adobe", "razorfish", "rga", "world economic forum"],
+    "confidence": "high"
+  },
+  {
+    "id": "exp-early-002",
+    "content": "Early in my career, I worked on some notable projects including a luxury online experience for the Financial Times 'How to Spend It' magazine featuring over-the-top 3D animations and ads from the world's top luxury brands. I also worked on the launch of Nokia's first touchscreen phone, the 5800 iPhone killer, with a website featuring Kanye West's American Girl playing over 3D Flash animations.",
+    "type": "experience",
+    "topics": ["early career", "financial times", "nokia", "luxury", "digital agency"],
+    "confidence": "high"
+  },
+  {
+    "id": "exp-early-003",
+    "content": "I was an early employee at Doof, a hyper-growth online gaming startup riding the wave of early addictive Flash games. I also developed interactive E-Learning platforms at Catalyst Interactive, Learning Curve, and Nortia Technologies, and introduced data-driven websites at a highly creative print-based design agency called Art Direction.",
+    "type": "experience",
+    "topics": ["early career", "doof", "gaming", "elearning", "startup"],
     "confidence": "high"
   },
   {
     "id": "skills-frontend-001",
-    "content": "My primary technical skills are in front-end development. I'm highly proficient in TypeScript, React, Next.js, TanStack, XState, Angular, RxJS, Storybook, SvelteKit, and Tailwind CSS (as well as many others over the years). For back-end work, I use Node, Deno, Docker, tRPC, Drizzle, REST, NestJS, GraphQL, Postgres, and PayloadCMS.",
+    "content": "My primary technical skills are in JavaScript development. I'm highly proficient in TypeScript, React, Next.js, TanStack, XState, Angular, RxJS, Storybook, SvelteKit, and Tailwind CSS. I spend most of my time with React and its ecosystem. I have a long history in Angular, which is uniquely suited to financial use cases. My favoured stack is probably a combination of TanStack with Convex, but I have nothing against Next.js and tRPC or React Server Actions.",
     "type": "skills",
-    "topics": ["skills", "typescript", "react", "frontend", "backend", "testing"],
+    "topics": ["skills", "typescript", "react", "frontend", "angular", "tanstack", "convex"],
+    "confidence": "high"
+  },
+  {
+    "id": "skills-backend-001",
+    "content": "For back-end work, I use Node, Deno, Docker, tRPC, Drizzle, REST, NestJS, GraphQL, Postgres, and PayloadCMS. I've never considered myself a full stack engineer in the traditional sense. I can build docker images, deploy them to cloud services, integrate auth, and wire up complex AI workflows. But the backend isn't where I choose to spend most of my time - my passion is where the users are.",
+    "type": "skills",
+    "topics": ["skills", "backend", "node", "docker", "graphql", "postgres"],
     "confidence": "high"
   },
   {
     "id": "skills-ai-001",
-    "content": "I have hands-on experience with AI tools and technologies. This includes MCP, n8n for automation, whisper for speech recognition, Ollama for local models, Claude Code, OpenCode, Gemini CLI, and AI-assisted design tools like V0, Bolt, and Lovable.",
+    "content": "I have hands-on experience with AI tools and technologies including MCP, n8n for automation, Whisper for speech recognition, Ollama for local models, Claude Code, OpenCode, Gemini CLI, and AI-assisted design tools like V0, Bolt, and Lovable. I've done plenty of vibe coding over the last year or so, which has taken me into territory I would never have ventured into before. The new way of working with agents suits my style.",
     "type": "skills",
-    "topics": ["ai", "skills", "mcp", "claude", "image generation", "automation"],
+    "topics": ["ai", "skills", "mcp", "claude", "vibe coding", "agents", "automation"],
     "confidence": "high"
   },
   {
     "id": "skills-management-001",
-    "content": "My engineering management skills include hiring, mentoring, code reviews, DORA metrics, Team Topologies, flow metrics, continuous delivery, Scrum, Lean/Kanban, product roadmaps, requirements gathering, OKRs, and stakeholder collaboration. For UX design, I handle discovery work like prototyping, journey mapping, personas, and one-pagers, as well as delivery work including interaction design, story mapping, and design systems. I use tools like Figma, Storybook, Sketch, Zeplin, and Axure.",
+    "content": "My engineering management skills include hiring, mentoring, code reviews, DORA metrics, Team Topologies, flow metrics, continuous delivery, Scrum, and Lean/Kanban. I like managing teams and growing people. I'm obsessed with team dynamics, organisational design, and getting the best out of people. I know how to organise engineers to move at pace, to build the right thing, and to build it to last.",
     "type": "skills",
-    "topics": ["management", "leadership", "agile", "ux", "design", "figma"],
+    "topics": ["management", "leadership", "agile", "hiring", "mentoring", "team dynamics"],
+    "confidence": "high"
+  },
+  {
+    "id": "skills-ux-001",
+    "content": "For UX design, I handle discovery work like prototyping, journey mapping, personas, and one-pagers, as well as delivery work including interaction design, story mapping, and design systems. I use tools like Figma, Storybook, Sketch, Zeplin, and Axure. I've spent a lot of time over the years in Figma and other design tools. I think I have good taste.",
+    "type": "skills",
+    "topics": ["ux", "design", "figma", "prototyping", "design systems"],
+    "confidence": "high"
+  },
+  {
+    "id": "skills-product-001",
+    "content": "My product management skills include product roadmaps, requirements gathering, OKRs, and stakeholder collaboration. My passion is where the users are. I've invested a huge amount of effort learning all the relevant disciplines - UX, product management, engineering management, agile, lean, DevOps. They all share the same objective: creating and supporting feedback loops to inform whether you're on the right track.",
+    "type": "skills",
+    "topics": ["product", "roadmaps", "okrs", "feedback loops", "discovery"],
+    "confidence": "high"
+  },
+  {
+    "id": "skills-domain-001",
+    "content": "My domain knowledge spans Capital Markets including foreign exchange, fixed income, commodities, and regulation. I also have deep experience in Artificial Intelligence including image generation and developer productivity tools. Trading platforms had to handle a firehose of data, which required a specialist skillset and completely different priorities from typical consumer apps.",
+    "type": "skills",
+    "topics": ["domain", "capital markets", "forex", "fixed income", "ai", "trading"],
+    "confidence": "high"
+  },
+  {
+    "id": "workstyle-001",
+    "content": "I've worked in hyper-growth startups and in the most bureaucratic of corporations. I know how to navigate most environments. As a builder, I've learned that I prefer small, nimble, and hungry organisations. In recent years, I've seen the industry favour generalists. With smaller teams aided by AI, the path is clear - to be effective across a wide spectrum of skills and to always be learning.",
+    "type": "identity",
+    "topics": ["workstyle", "preferences", "startups", "generalist", "environment"],
+    "confidence": "high"
+  },
+  {
+    "id": "achievements-001",
+    "content": "My proudest achievements include engineering cutting-edge, large-scale trading platforms at UBS and Morgan Stanley in London, working alongside the best of the best. I became Head of UI and UX, and part of the leadership team at Yieldbroker. I delivered the vitally important image generation interface at Leonardo.AI, helping shape their platform prior to the Canva acquisition.",
+    "type": "identity",
+    "topics": ["achievements", "proud", "accomplishments", "career highlights"],
     "confidence": "high"
   },
   {
@@ -78,9 +218,9 @@
   },
   {
     "id": "education-001",
-    "content": "I hold a Bachelor of Information Technology with a minor in Marketing from the University of Canberra.",
+    "content": "I hold a Bachelor of Information Technology with a minor in Marketing from the University of Canberra. I completed my Senior Secondary Certificate at Marist College.",
     "type": "identity",
-    "topics": ["education", "university", "degree", "study"],
+    "topics": ["education", "university", "degree", "study", "canberra"],
     "confidence": "high"
   },
   {
