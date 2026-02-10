@@ -14,61 +14,68 @@ const enableAiChat = await getFeatureFlag('ai-chat', false);
 const enableNotionProfile = await getFeatureFlag('enable-notion-profile', false);
 
 const posts = await getCollection('thoughts', ({ data }) => !data.draft);
-const sortedPosts = posts
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3);
+const sortedPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
 
 const experiences = [
   {
-    dateRange: "Jul 2024 — Now",
-    role: "Solutions Engineer",
-    company: "HERE (OpenFin)",
-    description: "Driving adoption of the HERE Enterprise Browser across the Asia-Pacific region. Forward deployed engineer at a major Australian financial institution, bridging product, engineering, and customer success to deliver successful implementations."
+    dateRange: 'Jul 2024 — Now',
+    role: 'Solutions Engineer',
+    company: 'HERE (OpenFin)',
+    description:
+      'Driving adoption of the HERE Enterprise Browser across the Asia-Pacific region. Forward deployed engineer at a major Australian financial institution, bridging product, engineering, and customer success to deliver successful implementations.'
   },
   {
-    dateRange: "Jan 2024 — Jul 2024",
-    role: "Senior Software Engineer",
-    company: "Leonardo.Ai",
-    description: "Joined Australia's fastest-growing AI startup and led the development of the Image Generation v2 interface and contributed to key features like the Universal Upscaler during a pivotal growth phase - just prior to acquisition by Canva. Improved delivery cadence, contributed to extensive hiring, and coached the team on engineering best practices."
+    dateRange: 'Jan 2024 — Jul 2024',
+    role: 'Senior Software Engineer',
+    company: 'Leonardo.Ai',
+    description:
+      "Joined Australia's fastest-growing AI startup and led the development of the Image Generation v2 interface and contributed to key features like the Universal Upscaler during a pivotal growth phase - just prior to acquisition by Canva. Improved delivery cadence, contributed to extensive hiring, and coached the team on engineering best practices."
   },
   {
-    dateRange: "Jan 2020 — Sep 2023",
-    role: "Head of UI / UX",
-    company: "Yieldbroker",
-    description: "Spearheaded a complete rebuild of a fixed income trading platform that underpins the Australian financial industry. Built and led a high-performing UI/UX team, owned end-to-end discovery and delivery, and collaborated with the CTO to transition the organisation toward a product operating model."
+    dateRange: 'Jan 2020 — Sep 2023',
+    role: 'Head of UI / UX',
+    company: 'Yieldbroker',
+    description:
+      'Spearheaded a complete rebuild of a fixed income trading platform that underpins the Australian financial industry. Built and led a high-performing UI/UX team, owned end-to-end discovery and delivery, and collaborated with the CTO to transition the organisation toward a product operating model.'
   },
   {
-    dateRange: "Mar 2010 — Dec 2019",
-    role: "Senior Software Engineer",
-    company: "Lab49",
-    description: "Go-to specialist for innovative trading platforms at major financial institutions across APAC, US, and Europe. Specialised in streaming data, real-time visualisation, and mission-critical interfaces."
+    dateRange: 'Mar 2010 — Dec 2019',
+    role: 'Senior Software Engineer',
+    company: 'Lab49',
+    description:
+      'Go-to specialist for innovative trading platforms at major financial institutions across APAC, US, and Europe. Specialised in streaming data, real-time visualisation, and mission-critical interfaces.'
   }
 ];
 
 const earlyCareer = [
-  { role: "Adobe Consulting", description: "Built exclusive social network for the World Economic Forum" },
-  { role: "Razorfish, R/GA, Cimex", description: "Freelance roles at London's top digital agencies" },
-  { role: "Doof", description: "Early employee at hyper-growth online gaming startup" },
-  { role: "Catalyst, Learning Curve, Nortia", description: "Developed interactive E-Learning platforms" },
-  { role: "Art Direction", description: "Introduced data-driven websites to highly creative print-based design agency" }
+  { role: 'Adobe Consulting', description: 'Built exclusive social network for the World Economic Forum' },
+  { role: 'Razorfish, R/GA, Cimex', description: "Freelance roles at London's top digital agencies" },
+  { role: 'Doof', description: 'Early employee at hyper-growth online gaming startup' },
+  { role: 'Catalyst, Learning Curve, Nortia', description: 'Developed interactive E-Learning platforms' },
+  { role: 'Art Direction', description: 'Introduced data-driven websites to highly creative print-based design agency' }
 ];
 
-const coreSkills = ["TypeScript", "React", "AI-driven development", "Product design", "Engineering management", "Technical pre-sales"];
+const coreSkills = [
+  'TypeScript',
+  'React',
+  'AI-driven development',
+  'Product design',
+  'Engineering management',
+  'Technical pre-sales'
+];
 ---
 
 <BaseLayout title="Ray Cashmore — Product Engineer">
   <SectionIndex />
 
   <main>
-{enableAiChat && (
-      <AnnouncementBar
-        text="Ask artificial Ray about his skills and experience"
-        href="/chat"
-      />
-    )}
+    {enableAiChat && <AnnouncementBar text="Ask Artificial Ray about his skills and experience" href="/chat" />}
 
     <!-- Section 01: Hero -->
-    <section id="hero" class="dark min-h-screen flex flex-col justify-end pb-[12vh] lg:pb-[15vh] relative overflow-hidden bg-[rgb(0,0,0)] text-[rgb(255,255,255)]">
+    <section
+      id="hero"
+      class="dark min-h-screen flex flex-col justify-end pb-[12vh] lg:pb-[15vh] relative overflow-hidden bg-[rgb(0,0,0)] text-[rgb(255,255,255)]"
+    >
       <canvas id="dot-grid" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
       <div class="relative z-10 px-8 lg:px-16 xl:px-24 max-w-[90vw] lg:max-w-[70vw]">
         <h1 class="type-hero-name">
@@ -124,7 +131,7 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
 
         const baseColor = '255, 255, 255';
 
-        dots.forEach(dot => {
+        dots.forEach((dot) => {
           const diagonal = (dot.x + dot.y) / 300;
           const wave1 = Math.sin(time * 0.0008 + diagonal + dot.phase);
           const wave2 = Math.sin(time * 0.0006 - diagonal * 0.7 + dot.phase * 1.3);
@@ -148,12 +155,7 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
     </script>
 
     <script>
-      const titles = [
-        'Product Engineer',
-        'Interaction Designer',
-        'Engineering Manager',
-        'AI Fiddler'
-      ];
+      const titles = ['Product Engineer', 'Interaction Designer', 'Engineering Manager', 'AI Fiddler'];
 
       let currentIndex = 0;
       const cyclingElement = document.getElementById('cycling-title');
@@ -177,7 +179,9 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
     <!-- Section 02: About -->
     <Section id="about" number="02" class="border-t border-border">
       <p class="text-xl md:text-2xl leading-relaxed text-muted max-w-3xl">
-        Engineering leader working at the intersection of technology, design, and product. Extensive experience leading ambitious teams in varied domains including generative AI and financial trading. Skilled in growing people, improving processes, hands-on coding, and driving organisational outcomes.
+        Engineering leader working at the intersection of technology, design, and product. Extensive experience leading
+        ambitious teams in varied domains including generative AI and financial trading. Skilled in growing people,
+        improving processes, hands-on coding, and driving organisational outcomes.
       </p>
     </Section>
 
@@ -186,19 +190,21 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
       <div class="flex flex-row justify-between items-start gap-6 mb-16">
         <h2 class="type-section-title">Experience</h2>
         <div class="flex items-center gap-6">
-          {enableNotionProfile && (
-            <a
-              href="https://raycashmore.notion.site/Ray-Cashmore-2380e8fa8ac380618cbae73656da7e71"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 text-muted hover:text-foreground transition-colors"
-            >
-              Full profile
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M7 17L17 7M17 7H7M17 7V17" />
-              </svg>
-            </a>
-          )}
+          {
+            enableNotionProfile && (
+              <a
+                href="https://raycashmore.notion.site/Ray-Cashmore-2380e8fa8ac380618cbae73656da7e71"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 text-muted hover:text-foreground transition-colors"
+              >
+                Full profile
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </a>
+            )
+          }
           <a
             href="/ray-cashmore-cv-ae5a8.pdf"
             download
@@ -206,7 +212,7 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
           >
             Download CV
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
             </svg>
           </a>
         </div>
@@ -214,9 +220,7 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
 
       <!-- Experience Entries -->
       <div class="space-y-12 mb-20">
-        {experiences.map((exp, i) => (
-          <ExperienceEntry {...exp} isLast={i === experiences.length - 1} />
-        ))}
+        {experiences.map((exp, i) => <ExperienceEntry {...exp} isLast={i === experiences.length - 1} />)}
       </div>
 
       <!-- Early Career Highlights -->
@@ -224,9 +228,13 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
         <div class="grid md:grid-cols-4 gap-4">
           <div class="text-sm text-muted">Early career highlights</div>
           <div class="md:col-span-3 space-y-3">
-            {earlyCareer.map((item) => (
-              <p class="text-sm"><span class="font-medium">{item.role}</span> — <span class="text-muted">{item.description}</span></p>
-            ))}
+            {
+              earlyCareer.map((item) => (
+                <p class="text-sm">
+                  <span class="font-medium">{item.role}</span> — <span class="text-muted">{item.description}</span>
+                </p>
+              ))
+            }
           </div>
         </div>
       </div>
@@ -235,39 +243,39 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
       <div>
         <h3 class="type-label text-muted mb-10">Core Skills</h3>
         <div class="flex flex-wrap gap-3">
-          {coreSkills.map(skill => (
-            <span class="px-4 py-2 border border-border text-sm">{skill}</span>
-          ))}
+          {coreSkills.map((skill) => <span class="px-4 py-2 border border-border text-sm">{skill}</span>)}
         </div>
       </div>
     </Section>
 
     <!-- Section 04: Connect -->
     <Section id="connect" number="04" class="border-t border-border">
-      <div class={enableThoughts ? "grid md:grid-cols-2 gap-16 md:gap-24" : ""}>
-        {enableThoughts && (
-          <div>
-            <h2 class="type-label text-muted mb-10">Thoughts</h2>
-            {sortedPosts.length > 0 ? (
-              <div class="space-y-8 mb-8">
-                {sortedPosts.map((post) => (
-                  <BlogCard
-                    title={post.data.title}
-                    date={post.data.date}
-                    slug={post.id}
-                    excerpt={post.data.excerpt}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p class="text-muted mb-8">No posts yet.</p>
-            )}
-            <a href="/thoughts" class="text-lg hover:opacity-60 inline-flex items-center gap-2">
-              View all writing
-              <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        )}
+      <div class={enableThoughts ? 'grid md:grid-cols-2 gap-16 md:gap-24' : ''}>
+        {
+          enableThoughts && (
+            <div>
+              <h2 class="type-label text-muted mb-10">Thoughts</h2>
+              {sortedPosts.length > 0 ? (
+                <div class="space-y-8 mb-8">
+                  {sortedPosts.map((post) => (
+                    <BlogCard
+                      title={post.data.title}
+                      date={post.data.date}
+                      slug={post.id}
+                      excerpt={post.data.excerpt}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p class="text-muted mb-8">No posts yet.</p>
+              )}
+              <a href="/thoughts" class="text-lg hover:opacity-60 inline-flex items-center gap-2">
+                View all writing
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          )
+        }
 
         <!-- Links -->
         <div>
@@ -279,19 +287,24 @@ const coreSkills = ["TypeScript", "React", "AI-driven development", "Product des
             <div>
               <ExternalLink href="https://github.com/raycashmore" label="GitHub" />
             </div>
-            {enableNotionProfile && (
-              <div>
-                <ExternalLink href="https://raycashmore.notion.site/Ray-Cashmore-2380e8fa8ac380618cbae73656da7e71" label="Full profile" />
-              </div>
-            )}
+            {
+              enableNotionProfile && (
+                <div>
+                  <ExternalLink
+                    href="https://raycashmore.notion.site/Ray-Cashmore-2380e8fa8ac380618cbae73656da7e71"
+                    label="Full profile"
+                  />
+                </div>
+              )
+            }
             <div>
               <a
                 href="#"
                 id="email-link"
                 class="inline-flex items-center gap-2 text-foreground hover:opacity-60"
                 data-u="ray"
-                data-d="cashmore.me"
-              >Email</a>
+                data-d="cashmore.me">Email</a
+              >
             </div>
           </div>
         </div>
