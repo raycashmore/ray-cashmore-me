@@ -103,44 +103,43 @@ function jittered(point: Point, seed: number, index: number): Point {
 }
 
 function createCurveStroke(width: number, height: number): CurveStroke {
-  const bandTop = height * randomBetween(0.12, 0.46);
-  const bandBottom = height * randomBetween(0.48, 0.82);
-  const startX = width * randomBetween(0.34, 0.82);
-  const endX = width * randomBetween(0.42, 0.95);
-  const direction = Math.random() > 0.5 ? 1 : -1;
+  const narrow = width < 640;
+  const startY = height * randomBetween(narrow ? 0.16 : 0.18, narrow ? 0.5 : 0.62);
+  const endY = startY + height * randomBetween(narrow ? -0.08 : -0.12, narrow ? 0.12 : 0.16);
 
   return {
     type: 'curve',
     start: {
-      x: startX,
-      y: bandTop
+      x: width * randomBetween(narrow ? 0.46 : 0.36, narrow ? 0.88 : 0.82),
+      y: startY
     },
     controlA: {
-      x: width * randomBetween(0.58, 1.02),
-      y: height * randomBetween(0.08, 0.34)
+      x: width * randomBetween(narrow ? 0.74 : 0.62, narrow ? 1.14 : 1.12),
+      y: startY + height * randomBetween(narrow ? -0.18 : -0.2, narrow ? 0.04 : 0.08)
     },
     controlB: {
-      x: width * randomBetween(0.22, 0.76),
-      y: bandBottom + height * randomBetween(-0.14, 0.1) * direction
+      x: width * randomBetween(narrow ? 0.5 : 0.2, narrow ? 0.98 : 0.86),
+      y: endY + height * randomBetween(narrow ? -0.04 : -0.08, narrow ? 0.14 : 0.18)
     },
     end: {
-      x: endX,
-      y: bandBottom
+      x: width * randomBetween(narrow ? 0.64 : 0.54, narrow ? 1.1 : 1.08),
+      y: endY
     },
     age: 0,
-    drawDuration: randomBetween(2200, 4200),
-    lingerDuration: randomBetween(5200, 9200),
-    fadeDuration: randomBetween(4200, 7000),
-    opacity: randomBetween(0.08, 0.18),
+    drawDuration: randomBetween(narrow ? 2800 : 2600, narrow ? 5200 : 5000),
+    lingerDuration: randomBetween(6200, 10400),
+    fadeDuration: randomBetween(4600, 7600),
+    opacity: randomBetween(narrow ? 0.055 : 0.07, narrow ? 0.13 : 0.16),
     width: randomBetween(0.45, 1.15),
     jitter: randomBetween(0, Math.PI * 2)
   };
 }
 
 function createGuideStroke(width: number, height: number): GuideStroke {
-  const horizontal = Math.random() > 0.35;
-  const y = height * randomBetween(0.18, 0.78);
-  const x = width * randomBetween(0.38, 0.88);
+  const narrow = width < 640;
+  const horizontal = narrow || Math.random() > 0.35;
+  const y = height * randomBetween(0.18, narrow ? 0.58 : 0.78);
+  const x = width * randomBetween(narrow ? 0.46 : 0.38, 0.88);
   const length = horizontal ? width * randomBetween(0.22, 0.5) : height * randomBetween(0.22, 0.52);
   const angle = horizontal ? randomBetween(-0.12, 0.08) : randomBetween(1.42, 1.68);
 
@@ -155,7 +154,7 @@ function createGuideStroke(width: number, height: number): GuideStroke {
     drawDuration: randomBetween(1800, 3200),
     lingerDuration: randomBetween(3800, 6800),
     fadeDuration: randomBetween(3600, 5600),
-    opacity: randomBetween(0.035, 0.07),
+    opacity: randomBetween(narrow ? 0.025 : 0.03, narrow ? 0.05 : 0.065),
     width: randomBetween(0.35, 0.75),
     jitter: randomBetween(0, Math.PI * 2)
   };
@@ -273,12 +272,14 @@ export function startFieldCurrentHero(canvas: HTMLCanvasElement) {
     nextCurveAt -= delta;
     nextGuideAt -= delta;
 
-    if (nextCurveAt <= 0 && strokes.length < MAX_STROKES) {
+    const maxStrokes = width < 640 ? 10 : MAX_STROKES;
+
+    if (nextCurveAt <= 0 && strokes.length < maxStrokes) {
       strokes.push(createCurveStroke(width, height));
       nextCurveAt = randomBetween(CURVE_INTERVAL * 0.7, CURVE_INTERVAL * 1.4);
     }
 
-    if (nextGuideAt <= 0 && strokes.length < MAX_STROKES) {
+    if (nextGuideAt <= 0 && strokes.length < maxStrokes) {
       strokes.push(createGuideStroke(width, height));
       nextGuideAt = randomBetween(GUIDE_INTERVAL * 0.75, GUIDE_INTERVAL * 1.45);
     }
