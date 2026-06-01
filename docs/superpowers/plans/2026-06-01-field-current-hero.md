@@ -546,6 +546,7 @@ Use these ranges:
 - `GUIDE_INTERVAL`: `6000` to `10000`
 - Curve opacity in `createCurveStroke()`: `0.06` to `0.18`
 - Guide opacity in `createGuideStroke()`: `0.025` to `0.07`
+- Curve geometry ranges in `createCurveStroke()` may be adjusted when verification shows the strokes crowd the hero text or form a recognizable object. Keep the existing Bezier stroke type, use only viewport-relative `width` and `height` multipliers, and keep generated control/end points within `-0.2` to `1.2` of the canvas width/height.
 
 Do not add new shapes, colors, dependencies, UI controls, or page layout changes during tuning.
 

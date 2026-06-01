@@ -129,7 +129,7 @@ function createCurveStroke(width: number, height: number): CurveStroke {
     drawDuration: randomBetween(narrow ? 2800 : 2600, narrow ? 5200 : 5000),
     lingerDuration: randomBetween(6200, 10400),
     fadeDuration: randomBetween(4600, 7600),
-    opacity: randomBetween(narrow ? 0.055 : 0.07, narrow ? 0.13 : 0.16),
+    opacity: randomBetween(narrow ? 0.06 : 0.07, narrow ? 0.13 : 0.16),
     width: randomBetween(0.45, 1.15),
     jitter: randomBetween(0, Math.PI * 2)
   };
@@ -272,7 +272,7 @@ export function startFieldCurrentHero(canvas: HTMLCanvasElement) {
     nextCurveAt -= delta;
     nextGuideAt -= delta;
 
-    const maxStrokes = width < 640 ? 10 : MAX_STROKES;
+    const maxStrokes = width < 640 ? 12 : MAX_STROKES;
 
     if (nextCurveAt <= 0 && strokes.length < maxStrokes) {
       strokes.push(createCurveStroke(width, height));
