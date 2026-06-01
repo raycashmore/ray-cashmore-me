@@ -224,6 +224,7 @@ export function startFieldCurrentHero(canvas: HTMLCanvasElement) {
     return () => {};
   }
 
+  const ctx: CanvasRenderingContext2D = context;
   const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   const strokes: SketchStroke[] = [];
   let animationId = 0;
@@ -241,7 +242,7 @@ export function startFieldCurrentHero(canvas: HTMLCanvasElement) {
     height = rect.height;
     canvas.width = Math.max(1, Math.floor(width * dpr));
     canvas.height = Math.max(1, Math.floor(height * dpr));
-    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     strokes.length = 0;
     nextCurveAt = 0;
     nextGuideAt = GUIDE_INTERVAL * 0.6;
@@ -249,7 +250,7 @@ export function startFieldCurrentHero(canvas: HTMLCanvasElement) {
   }
 
   function clear() {
-    context.clearRect(0, 0, width, height);
+    ctx.clearRect(0, 0, width, height);
   }
 
   function stop() {
@@ -266,8 +267,8 @@ export function startFieldCurrentHero(canvas: HTMLCanvasElement) {
     const delta = Math.min(64, time - lastTime);
     lastTime = time;
 
-    context.fillStyle = BACKGROUND_COLOR;
-    context.fillRect(0, 0, width, height);
+    ctx.fillStyle = BACKGROUND_COLOR;
+    ctx.fillRect(0, 0, width, height);
 
     nextCurveAt -= delta;
     nextGuideAt -= delta;
@@ -284,7 +285,7 @@ export function startFieldCurrentHero(canvas: HTMLCanvasElement) {
 
     for (const stroke of strokes) {
       stroke.age += delta;
-      drawStroke(context, stroke);
+      drawStroke(ctx, stroke);
     }
 
     for (let index = strokes.length - 1; index >= 0; index--) {
