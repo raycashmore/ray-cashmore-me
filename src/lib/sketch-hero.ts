@@ -24,8 +24,8 @@ type ActiveCluster = {
   fadeMs: number;
 };
 
-const SPAWN_MIN = 8000;
-const SPAWN_MAX = 14000;
+const SPAWN_MIN = 5000;
+const SPAWN_MAX = 9000;
 const FIRST_SPAWN = 800;
 const LINGER_MIN = 18000;
 const LINGER_MAX = 28000;
@@ -36,7 +36,7 @@ const PLACEMENT_ATTEMPTS = 20;
 
 // The hero section is always dark, so strokes are always white.
 const STROKE_COLOR = '255, 255, 255';
-const ALPHA = { min: 0.16, max: 0.3 };
+const ALPHA = { min: 0.08, max: 0.16 };
 
 function rand(min: number, max: number) {
   return min + Math.random() * (max - min);
@@ -180,7 +180,7 @@ export function startSketchHero(canvas: HTMLCanvasElement) {
   }
 
   function spawnCluster() {
-    const maxClusters = isNarrow() ? 2 : 3;
+    const maxClusters = isNarrow() ? 3 : 5;
 
     if (clusters.length >= maxClusters) {
       return;

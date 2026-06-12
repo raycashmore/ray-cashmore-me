@@ -27,7 +27,7 @@ export type ClusterRecipe = {
 export type Rng = () => number;
 
 const SAMPLE_STEP = 5;
-const BASE_WIDTH = 2.2;
+const BASE_WIDTH = 3;
 const PEN_SPEED_MIN = 90;
 const PEN_SPEED_MAX = 140;
 
