@@ -74,10 +74,14 @@ const coreSkills = [
     <!-- Section 01: Hero -->
     <section
       id="hero"
-      class="dark min-h-screen flex flex-col justify-end pb-[12vh] lg:pb-[15vh] relative overflow-hidden bg-[rgb(0,0,0)] text-[rgb(255,255,255)]"
+      class="dark min-h-screen flex flex-col justify-end pb-[12vh] lg:pb-[15vh] relative overflow-hidden bg-background text-foreground"
     >
-      <canvas id="dot-grid" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
-      <div class="relative z-10 px-8 lg:px-16 xl:px-24 max-w-[90vw] lg:max-w-[70vw]">
+      <canvas
+        id="sketch-hero-canvas"
+        aria-hidden="true"
+        class="absolute inset-0 w-full h-full pointer-events-none"
+      ></canvas>
+      <div data-hero-content class="relative z-10 px-8 lg:px-16 xl:px-24 max-w-[90vw] lg:max-w-[70vw]">
         <h1 class="type-hero-name">
           <span class="block">Ray</span>
           <span class="block">Cashmore</span>
@@ -89,73 +93,17 @@ const coreSkills = [
     </section>
 
     <script>
-      const canvas = document.getElementById('dot-grid') as HTMLCanvasElement;
-      const ctx = canvas.getContext('2d')!;
+      import { startSketchHero } from '../lib/sketch-hero';
 
-      const DOT_SPACING = 24;
-      const DOT_RADIUS = 1;
-      const BASE_OPACITY = 0.03;
-      const WAVE_OPACITY = 0.25;
+      const canvas = document.getElementById('sketch-hero-canvas') as HTMLCanvasElement | null;
 
-      let dots: { x: number; y: number; phase: number }[] = [];
-      let animationId: number;
-
-      function resize() {
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        ctx.scale(dpr, dpr);
-        createDots(rect.width, rect.height);
+      if (canvas) {
+        startSketchHero(canvas);
       }
-
-      function createDots(width: number, height: number) {
-        dots = [];
-        const cols = Math.ceil(width / DOT_SPACING) + 1;
-        const rows = Math.ceil(height / DOT_SPACING) + 1;
-
-        for (let row = 0; row < rows; row++) {
-          for (let col = 0; col < cols; col++) {
-            dots.push({
-              x: col * DOT_SPACING,
-              y: row * DOT_SPACING,
-              phase: Math.random() * 0.5
-            });
-          }
-        }
-      }
-
-      function draw(time: number) {
-        const rect = canvas.getBoundingClientRect();
-        ctx.clearRect(0, 0, rect.width, rect.height);
-
-        const baseColor = '255, 255, 255';
-
-        dots.forEach((dot) => {
-          const diagonal = (dot.x + dot.y) / 300;
-          const wave1 = Math.sin(time * 0.0008 + diagonal + dot.phase);
-          const wave2 = Math.sin(time * 0.0006 - diagonal * 0.7 + dot.phase * 1.3);
-          const wave3 = Math.sin(time * 0.001 + diagonal * 0.5 + dot.phase * 0.8);
-
-          const combined = (wave1 + wave2 + wave3) / 3;
-          const opacity = BASE_OPACITY + (combined * 0.5 + 0.5) * WAVE_OPACITY;
-
-          ctx.beginPath();
-          ctx.arc(dot.x, dot.y, DOT_RADIUS, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${baseColor}, ${opacity})`;
-          ctx.fill();
-        });
-
-        animationId = requestAnimationFrame(draw);
-      }
-
-      resize();
-      window.addEventListener('resize', resize);
-      animationId = requestAnimationFrame(draw);
     </script>
 
     <script>
-      const titles = ['Product Engineer', 'Interaction Designer', 'Engineering Manager', 'AI Fiddler'];
+      const titles = ['Product Engineer', 'Solutions Engineer', 'Designer', 'AI Fiddler'];
 
       let currentIndex = 0;
       const cyclingElement = document.getElementById('cycling-title');
@@ -206,12 +154,12 @@ const coreSkills = [
             )
           }
           <a
-            href="/ray-cashmore-cv-ae5a8.pdf"
+            href="/ray-cashmore-cv-1be94.pdf"
             download
             class="inline-flex items-center gap-2 px-5 py-2.5 border border-foreground hover:bg-foreground hover:text-background transition-colors text-sm font-medium"
           >
             Download CV
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <svg class="w-4 h-4 link-arrow-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
             </svg>
           </a>
@@ -224,7 +172,7 @@ const coreSkills = [
       </div>
 
       <!-- Early Career Highlights -->
-      <div class="mb-20 pt-12 border-t border-border">
+      <div class="mb-20 pt-12 border-t border-border" data-reveal>
         <div class="grid md:grid-cols-4 gap-4">
           <div class="text-sm text-muted">Early career highlights</div>
           <div class="md:col-span-3 space-y-3">
@@ -240,10 +188,10 @@ const coreSkills = [
       </div>
 
       <!-- Skills -->
-      <div>
+      <div data-reveal>
         <h3 class="type-label text-muted mb-10">Core Skills</h3>
         <div class="flex flex-wrap gap-3">
-          {coreSkills.map((skill) => <span class="px-4 py-2 border border-border text-sm">{skill}</span>)}
+          {coreSkills.map((skill) => <span class="px-4 py-2 border border-border hover:border-foreground transition-colors duration-300 text-sm">{skill}</span>)}
         </div>
       </div>
     </Section>
@@ -271,14 +219,14 @@ const coreSkills = [
               )}
               <a href="/thoughts" class="text-lg hover:opacity-60 inline-flex items-center gap-2">
                 View all writing
-                <span aria-hidden="true">→</span>
+                <span aria-hidden="true" class="link-arrow-right">→</span>
               </a>
             </div>
           )
         }
 
         <!-- Links -->
-        <div>
+        <div data-reveal>
           <h2 class="type-label text-muted mb-10">Links</h2>
           <div class="space-y-4">
             <div>
