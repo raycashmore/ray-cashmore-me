@@ -9,7 +9,7 @@ interface Props {
 const { dateRange, role, company, description, isLast = false } = Astro.props;
 ---
 
-<article class:list={[
+<article data-reveal class:list={[
   "grid md:grid-cols-4 gap-4",
   isLast ? "" : "pb-12 border-b border-border"
 ]}>

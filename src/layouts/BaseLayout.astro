@@ -20,6 +20,11 @@ const { title, description = "Product Engineer" } = Astro.props;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <title>{title}</title>
+    <script is:inline>
+      // Gate JS-dependent styling (e.g. scroll-reveal hiding) so content is
+      // never invisible when scripts don't run
+      document.documentElement.classList.add('js');
+    </script>
   </head>
   <body class="bg-background text-foreground antialiased">
     <slot />
@@ -33,6 +38,11 @@ const { title, description = "Product Engineer" } = Astro.props;
           document.documentElement.classList.add('dark');
         }
       })();
+    </script>
+    <script>
+      import { initReveal } from '../lib/reveal';
+
+      initReveal();
     </script>
   </body>
 </html>
