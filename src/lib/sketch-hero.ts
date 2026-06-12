@@ -38,6 +38,13 @@ const PLACEMENT_ATTEMPTS = 20;
 const STROKE_COLOR = '255, 255, 255';
 const ALPHA = { min: 0.08, max: 0.16 };
 
+// Dot-grid "paper" beneath the sketches. Dots sit on the same grid the
+// glyphs snap to, with a slow diagonal wave shimmer.
+const DOT_RADIUS = 1;
+const DOT_BASE_OPACITY = 0.03;
+const DOT_WAVE_OPACITY = 0.18;
+const DOT_STATIC_OPACITY = 0.06;
+
 function rand(min: number, max: number) {
   return min + Math.random() * (max - min);
 }
@@ -84,6 +91,7 @@ export function startSketchHero(canvas: HTMLCanvasElement) {
   let lastFrameAt = 0;
   let nextSpawnAt = FIRST_SPAWN;
   let clusters: ActiveCluster[] = [];
+  let dots: { x: number; y: number; phase: number }[] = [];
   let tabVisible = !document.hidden;
   let heroInView = true;
   let resizeTimer = 0;
@@ -259,10 +267,45 @@ export function startSketchHero(canvas: HTMLCanvasElement) {
     }
   }
 
+  function createDots() {
+    dots = [];
+    const spacing = gridUnit();
+    const cols = Math.ceil(width / spacing) + 1;
+    const rows = Math.ceil(height / spacing) + 1;
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        dots.push({ x: col * spacing, y: row * spacing, phase: Math.random() * 0.5 });
+      }
+    }
+  }
+
+  function drawDots(animated: boolean) {
+    for (const dot of dots) {
+      let opacity = DOT_STATIC_OPACITY;
+
+      if (animated) {
+        const diagonal = (dot.x + dot.y) / 300;
+        const wave1 = Math.sin(engineTime * 0.0008 + diagonal + dot.phase);
+        const wave2 = Math.sin(engineTime * 0.0006 - diagonal * 0.7 + dot.phase * 1.3);
+        const wave3 = Math.sin(engineTime * 0.001 + diagonal * 0.5 + dot.phase * 0.8);
+        const combined = (wave1 + wave2 + wave3) / 3;
+        opacity = DOT_BASE_OPACITY + (combined * 0.5 + 0.5) * DOT_WAVE_OPACITY;
+      }
+
+      ctx.beginPath();
+      ctx.arc(dot.x, dot.y, DOT_RADIUS, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${STROKE_COLOR}, ${opacity})`;
+      ctx.fill();
+    }
+  }
+
   function render() {
     ctx.clearRect(0, 0, width, height);
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
+
+    drawDots(true);
 
     for (const cluster of clusters) {
       const fade = clusterAlpha(cluster);
@@ -293,6 +336,8 @@ export function startSketchHero(canvas: HTMLCanvasElement) {
     ctx.clearRect(0, 0, width, height);
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
+
+    drawDots(false);
 
     const recipe = createStaticCluster(Math.random, gridUnit());
     const margin = gridUnit();
@@ -343,6 +388,7 @@ export function startSketchHero(canvas: HTMLCanvasElement) {
     canvas.width = Math.max(1, Math.floor(width * dpr));
     canvas.height = Math.max(1, Math.floor(height * dpr));
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    createDots();
   }
 
   function handleResize() {
