@@ -1,4 +1,4 @@
-const STAGGER_MS = 90;
+const STAGGER_MS = 50;
 const STAGGER_CAP = 4;
 
 export function initReveal() {
