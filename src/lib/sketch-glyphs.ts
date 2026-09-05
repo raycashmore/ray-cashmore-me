@@ -1,423 +1,213 @@
-export type Pt = { x: number; y: number };
-
-export type Segment = {
-  points: Pt[];
-  widths: number[];
-  drawMs: number;
-  pauseAfterMs: number;
+export type Point = { x: number; y: number };
+export type Rect = Point & { w: number; h: number };
+export type Stroke = {
+  points: Point[];
+  width: number;
+  opacity: number;
+  start: number;
+  duration: number;
 };
 
-export type Glyph = {
-  segments: Segment[];
-};
+export const STUDY_SIZE = { w: 860, h: 470 };
+export const DRAW_DURATION = 4800;
 
-export type PlacedGlyph = {
-  glyph: Glyph;
-  // delay after the previous glyph in the cluster finishes drawing
-  startDelayMs: number;
-  // 0..1, mapped onto the theme's alpha range at render time
-  alphaT: number;
-};
-
-export type ClusterRecipe = {
-  glyphs: PlacedGlyph[];
-  bounds: { w: number; h: number };
-};
-
-export type Rng = () => number;
-
-const SAMPLE_STEP = 5;
-const BASE_WIDTH = 3;
-const PEN_SPEED_MIN = 90;
-const PEN_SPEED_MAX = 140;
-
-function rand(rng: Rng, min: number, max: number) {
-  return min + rng() * (max - min);
-}
-
-function pick<T>(rng: Rng, items: T[]): T {
-  return items[Math.floor(rng() * items.length)];
-}
-
-function distance(a: Pt, b: Pt) {
-  return Math.hypot(b.x - a.x, b.y - a.y);
-}
-
-// Smooth pseudo-noise over t in [0,1] from a few cosine-interpolated control values.
-function pressureProfile(rng: Rng, count: number): number[] {
-  const controls = [rand(rng, 0, 1), rand(rng, 0, 1), rand(rng, 0, 1)];
-  const widths: number[] = [];
-
-  for (let i = 0; i < count; i++) {
-    const t = count === 1 ? 0 : i / (count - 1);
-    const scaled = t * (controls.length - 1);
-    const index = Math.min(controls.length - 2, Math.floor(scaled));
-    const local = scaled - index;
-    const eased = (1 - Math.cos(local * Math.PI)) / 2;
-    const noise = controls[index] * (1 - eased) + controls[index + 1] * eased;
-    widths.push(BASE_WIDTH * (0.75 + 0.5 * noise));
-  }
-
-  return widths;
-}
-
-function microSkew(rng: Rng, point: Pt): Pt {
-  return {
-    x: point.x + rand(rng, -0.75, 0.75),
-    y: point.y + rand(rng, -0.75, 0.75)
-  };
-}
-
-// One pen stroke between two points, with overshoot past the true end.
-function lineSegment(rng: Rng, from: Pt, to: Pt, options?: { overshoot?: boolean; pauseAfterMs?: number }): Segment {
-  const start = microSkew(rng, from);
-  const trueEnd = microSkew(rng, to);
-  const length = Math.max(1, distance(start, trueEnd));
-
-  let end = trueEnd;
-  if (options?.overshoot !== false && length > 16) {
-    const over = rand(rng, 2, 4) / length;
-    end = {
-      x: trueEnd.x + (trueEnd.x - start.x) * over,
-      y: trueEnd.y + (trueEnd.y - start.y) * over
-    };
-  }
-
-  const drawnLength = distance(start, end);
-  const count = Math.max(2, Math.ceil(drawnLength / SAMPLE_STEP) + 1);
-  const points: Pt[] = [];
-
-  for (let i = 0; i < count; i++) {
-    const t = i / (count - 1);
-    points.push({ x: start.x + (end.x - start.x) * t, y: start.y + (end.y - start.y) * t });
-  }
-
-  return {
-    points,
-    widths: pressureProfile(rng, count),
-    drawMs: (drawnLength / rand(rng, PEN_SPEED_MIN, PEN_SPEED_MAX)) * 1000,
-    pauseAfterMs: options?.pauseAfterMs ?? rand(rng, 150, 450)
-  };
-}
-
-function polyline(rng: Rng, corners: Pt[]): Segment[] {
-  const segments: Segment[] = [];
-
-  for (let i = 0; i < corners.length - 1; i++) {
-    segments.push(lineSegment(rng, corners[i], corners[i + 1]));
-  }
-
-  return segments;
-}
-
-// Open-V arrowhead pointing along the direction from `fromward` to `tip`.
-function arrowhead(rng: Rng, tip: Pt, fromward: Pt, size: number): Segment[] {
-  const angle = Math.atan2(tip.y - fromward.y, tip.x - fromward.x);
-  const spread = 0.46;
-  const left: Pt = {
-    x: tip.x - Math.cos(angle - spread) * size,
-    y: tip.y - Math.sin(angle - spread) * size
-  };
-  const right: Pt = {
-    x: tip.x - Math.cos(angle + spread) * size,
-    y: tip.y - Math.sin(angle + spread) * size
-  };
-
-  return [
-    lineSegment(rng, left, tip, { overshoot: false, pauseAfterMs: rand(rng, 120, 240) }),
-    lineSegment(rng, right, tip, { overshoot: false })
-  ];
-}
-
-export function wireframeBox(rng: Rng, origin: Pt, wUnits: number, hUnits: number, unit: number): Glyph {
-  const w = wUnits * unit;
-  const h = hUnits * unit;
-  const { x, y } = origin;
-
-  const segments = polyline(rng, [
-    { x, y },
-    { x: x + w, y },
-    { x: x + w, y: y + h },
-    { x, y: y + h },
-    { x, y }
-  ]);
-
-  const hasHeader = hUnits >= 3 && rng() < 0.4;
-  if (hasHeader) {
-    segments.push(lineSegment(rng, { x, y: y + unit }, { x: x + w, y: y + unit }));
-  }
-
-  if (rng() < 0.5 && hUnits >= 3) {
-    const contentTop = y + (hasHeader ? unit : 0);
-    const contentHeight = y + h - contentTop;
-    const lines = Math.min(3, Math.max(2, Math.floor(contentHeight / unit) - 1));
-
-    for (let i = 1; i <= lines; i++) {
-      const lineY = contentTop + (contentHeight / (lines + 1)) * i;
-      const lineW = w * rand(rng, 0.6, 0.85);
-      segments.push(
-        lineSegment(rng, { x: x + unit * 0.5, y: lineY }, { x: x + unit * 0.5 + lineW, y: lineY }, { overshoot: false })
-      );
-    }
-  }
-
-  return { segments };
-}
-
-export function arrowStraight(rng: Rng, from: Pt, to: Pt, unit: number): Glyph {
-  return {
-    segments: [lineSegment(rng, from, to), ...arrowhead(rng, to, from, unit * 0.35)]
-  };
-}
-
-export function arrowElbow(rng: Rng, from: Pt, to: Pt, unit: number): Glyph {
-  // Horizontal first, then vertical (or the reverse), like a connector in a diagram.
-  const horizontalFirst = Math.abs(to.x - from.x) >= Math.abs(to.y - from.y);
-  const elbow: Pt = horizontalFirst ? { x: to.x, y: from.y } : { x: from.x, y: to.y };
-
-  return {
-    segments: [
-      lineSegment(rng, from, elbow),
-      lineSegment(rng, elbow, to),
-      ...arrowhead(rng, to, elbow, unit * 0.35)
-    ]
-  };
-}
-
-export function circleNode(rng: Rng, center: Pt, radius: number): Glyph {
-  // Start around 10 o'clock, sweep a full turn plus a slight overlap.
-  const startAngle = Math.PI * 1.2 + rand(rng, -0.15, 0.15);
-  const overlap = rand(rng, 0.1, 0.18);
-  const total = Math.PI * 2 + overlap;
-  const count = 26;
-  const points: Pt[] = [];
-
-  const wobbleSeed = rand(rng, 0, Math.PI * 2);
-  for (let i = 0; i < count; i++) {
-    const t = i / (count - 1);
-    const angle = startAngle + total * t;
-    const r = radius + Math.sin(wobbleSeed + t * Math.PI * 2) * 0.6;
-    points.push({ x: center.x + Math.cos(angle) * r, y: center.y + Math.sin(angle) * r });
-  }
-
-  const circumference = Math.PI * 2 * radius;
-
-  return {
-    segments: [
-      {
-        points,
-        widths: pressureProfile(rng, count),
-        drawMs: (circumference / rand(rng, PEN_SPEED_MIN, PEN_SPEED_MAX)) * 1000,
-        pauseAfterMs: rand(rng, 150, 450)
-      }
-    ]
-  };
-}
-
-export function diamondNode(rng: Rng, center: Pt, radius: number): Glyph {
-  return {
-    segments: polyline(rng, [
-      { x: center.x, y: center.y - radius },
-      { x: center.x + radius, y: center.y },
-      { x: center.x, y: center.y + radius },
-      { x: center.x - radius, y: center.y },
-      { x: center.x, y: center.y - radius }
-    ])
-  };
-}
-
-export function crosshair(rng: Rng, center: Pt, unit: number): Glyph {
-  const arm = unit * 0.5;
-  const segments = [
-    lineSegment(rng, { x: center.x - arm, y: center.y }, { x: center.x + arm, y: center.y }, { overshoot: false }),
-    lineSegment(rng, { x: center.x, y: center.y - arm }, { x: center.x, y: center.y + arm }, { overshoot: false })
-  ];
-
-  if (rng() < 0.5) {
-    segments.push(...circleNode(rng, center, arm * 0.55).segments);
-  }
-
-  return { segments };
-}
-
-export function dimensionLine(rng: Rng, from: Pt, to: Pt, unit: number): Glyph {
-  const angle = Math.atan2(to.y - from.y, to.x - from.x);
-  const tick = unit * 0.3;
-  const perpX = Math.cos(angle + Math.PI / 2) * tick;
-  const perpY = Math.sin(angle + Math.PI / 2) * tick;
-
-  const tickAt = (p: Pt) =>
-    lineSegment(rng, { x: p.x - perpX, y: p.y - perpY }, { x: p.x + perpX, y: p.y + perpY }, { overshoot: false });
-
-  return {
-    segments: [tickAt(from), lineSegment(rng, from, to, { overshoot: false }), tickAt(to)]
-  };
-}
-
-export function underline(rng: Rng, from: Pt, length: number): Glyph {
-  return {
-    segments: [lineSegment(rng, from, { x: from.x + length, y: from.y })]
-  };
-}
-
-function glyphDelay(rng: Rng) {
-  return rand(rng, 600, 1200);
-}
-
-// --- Cluster recipes -------------------------------------------------------
-// Recipes lay out glyphs in local coordinates starting at (0,0) and report
-// their footprint so the engine can place and collision-test the cluster.
-
-function boxPair(rng: Rng, unit: number, small: boolean): ClusterRecipe {
-  const aW = small ? 3 : Math.floor(rand(rng, 3, 6));
-  const aH = small ? 2 : Math.floor(rand(rng, 2, 5));
-  const bW = small ? 3 : Math.floor(rand(rng, 3, 6));
-  const bH = small ? 2 : Math.floor(rand(rng, 2, 4));
-  const gap = Math.floor(rand(rng, small ? 2 : 3, small ? 4 : 6));
-  const vertical = rng() < 0.35;
-
-  const a: Pt = { x: 0, y: 0 };
-  const b: Pt = vertical
-    ? { x: Math.floor(rand(rng, 0, 2)) * unit, y: (aH + gap) * unit }
-    : { x: (aW + gap) * unit, y: Math.floor(rand(rng, -1, 2)) * unit };
-
-  const shift = { x: Math.max(0, -b.x), y: Math.max(0, -b.y) };
-  a.x += shift.x;
-  a.y += shift.y;
-  b.x += shift.x;
-  b.y += shift.y;
-
-  const arrowFrom: Pt = vertical
-    ? { x: a.x + (aW * unit) / 2, y: a.y + aH * unit }
-    : { x: a.x + aW * unit, y: a.y + (aH * unit) / 2 };
-  const arrowTo: Pt = vertical
-    ? { x: b.x + (bW * unit) / 2, y: b.y - unit * 0.3 }
-    : { x: b.x - unit * 0.3, y: b.y + (bH * unit) / 2 };
-
-  const arrow =
-    Math.abs(arrowFrom.x - arrowTo.x) > unit && Math.abs(arrowFrom.y - arrowTo.y) > unit
-      ? arrowElbow(rng, arrowFrom, arrowTo, unit)
-      : arrowStraight(rng, arrowFrom, arrowTo, unit);
-
-  return {
-    glyphs: [
-      { glyph: wireframeBox(rng, a, aW, aH, unit), startDelayMs: 0, alphaT: rng() },
-      { glyph: wireframeBox(rng, b, bW, bH, unit), startDelayMs: glyphDelay(rng), alphaT: rng() },
-      { glyph: arrow, startDelayMs: glyphDelay(rng), alphaT: rng() }
-    ],
-    bounds: {
-      w: Math.max(a.x + aW * unit, b.x + bW * unit),
-      h: Math.max(a.y + aH * unit, b.y + bH * unit)
-    }
-  };
-}
-
-function flowTriple(rng: Rng, unit: number): ClusterRecipe {
-  const nodeR = unit * rand(rng, 1, 1.4);
-  const boxW = Math.floor(rand(rng, 3, 5));
-  const boxH = Math.floor(rand(rng, 2, 3));
-  const gap = Math.floor(rand(rng, 2, 4)) * unit;
-
-  const midY = Math.max(nodeR, (boxH * unit) / 2);
-  const startNode: Pt = { x: nodeR, y: midY };
-  const boxOrigin: Pt = { x: startNode.x + nodeR + gap, y: midY - (boxH * unit) / 2 };
-  const endCenter: Pt = { x: boxOrigin.x + boxW * unit + gap + nodeR, y: midY };
-
-  const endNode = rng() < 0.5 ? circleNode(rng, endCenter, nodeR) : diamondNode(rng, endCenter, nodeR);
-
-  return {
-    glyphs: [
-      { glyph: circleNode(rng, startNode, nodeR), startDelayMs: 0, alphaT: rng() },
-      {
-        glyph: arrowStraight(rng, { x: startNode.x + nodeR, y: midY }, { x: boxOrigin.x - unit * 0.3, y: midY }, unit),
-        startDelayMs: glyphDelay(rng),
-        alphaT: rng()
-      },
-      { glyph: wireframeBox(rng, boxOrigin, boxW, boxH, unit), startDelayMs: glyphDelay(rng), alphaT: rng() },
-      {
-        glyph: arrowStraight(
-          rng,
-          { x: boxOrigin.x + boxW * unit, y: midY },
-          { x: endCenter.x - nodeR - unit * 0.3, y: midY },
-          unit
-        ),
-        startDelayMs: glyphDelay(rng),
-        alphaT: rng()
-      },
-      { glyph: endNode, startDelayMs: glyphDelay(rng), alphaT: rng() }
-    ],
-    bounds: { w: endCenter.x + nodeR, h: Math.max(nodeR * 2, boxH * unit) }
-  };
-}
-
-function annotatedBox(rng: Rng, unit: number): ClusterRecipe {
-  const boxW = Math.floor(rand(rng, 4, 7));
-  const boxH = Math.floor(rand(rng, 3, 5));
-  const pad = unit;
-  const origin: Pt = { x: pad, y: pad };
-
-  const dimY = origin.y + boxH * unit + unit * 0.5;
-  const crossCenter: Pt = { x: origin.x + boxW * unit + unit * 0.75, y: origin.y - unit * 0.25 };
-
-  return {
-    glyphs: [
-      { glyph: wireframeBox(rng, origin, boxW, boxH, unit), startDelayMs: 0, alphaT: rng() },
-      {
-        glyph: dimensionLine(rng, { x: origin.x, y: dimY }, { x: origin.x + boxW * unit, y: dimY }, unit),
-        startDelayMs: glyphDelay(rng),
-        alphaT: rng()
-      },
-      { glyph: crosshair(rng, crossCenter, unit), startDelayMs: glyphDelay(rng), alphaT: rng() }
-    ],
-    bounds: { w: pad + boxW * unit + unit * 1.5, h: pad + boxH * unit + unit }
-  };
-}
-
-function soloMark(rng: Rng, unit: number): ClusterRecipe {
-  if (rng() < 0.5) {
-    const center: Pt = { x: unit, y: unit };
-    return {
-      glyphs: [
-        { glyph: crosshair(rng, center, unit), startDelayMs: 0, alphaT: rng() },
+// Fit the complete study into the larger clear space above or beside the name.
+// Both the animated and reduced-motion compositions use the same safe bounds.
+export function fitStudy(width: number, height: number, content: Rect | null): Rect | null {
+  const margin = width < 640 ? 24 : 48;
+  const top = 92;
+  const zones: Rect[] = content
+    ? [
+        { x: margin, y: top, w: width - margin * 2, h: content.y - top - 32 },
         {
-          glyph: underline(rng, { x: unit * 0.25, y: unit * 2.2 }, unit * rand(rng, 2, 4)),
-          startDelayMs: glyphDelay(rng),
-          alphaT: rng()
+          x: content.x + content.w + 32,
+          y: top,
+          w: width - content.x - content.w - 32 - margin,
+          h: height - top - margin
         }
-      ],
-      bounds: { w: unit * 4.5, h: unit * 2.6 }
-    };
-  }
-
-  const radius = unit * rand(rng, 1, 1.5);
-  return {
-    glyphs: [{ glyph: diamondNode(rng, { x: radius, y: radius }, radius), startDelayMs: 0, alphaT: rng() }],
-    bounds: { w: radius * 2, h: radius * 2 }
-  };
+      ]
+    : [{ x: margin, y: top, w: width - margin * 2, h: height - top - margin }];
+  const candidates = zones
+    .filter((zone) => zone.w > 0 && zone.h > 0)
+    .map((zone) => {
+      const scale = Math.min(zone.w / STUDY_SIZE.w, zone.h / STUDY_SIZE.h, 1.15);
+      const w = STUDY_SIZE.w * scale;
+      const h = STUDY_SIZE.h * scale;
+      return { x: zone.x + (zone.w - w) * 0.78, y: zone.y + (zone.h - h) * 0.5, w, h };
+    });
+  return candidates.sort((a, b) => b.w - a.w)[0] ?? null;
 }
 
-const RECIPES: { weight: number; small: boolean; build: (rng: Rng, unit: number, small: boolean) => ClusterRecipe }[] = [
-  { weight: 3, small: true, build: (rng, unit, small) => boxPair(rng, unit, small) },
-  { weight: 2, small: false, build: (rng, unit) => flowTriple(rng, unit) },
-  { weight: 2, small: false, build: (rng, unit) => annotatedBox(rng, unit) },
-  { weight: 1, small: true, build: (rng, unit) => soloMark(rng, unit) }
-];
-
-export function createCluster(rng: Rng, unit: number, smallOnly: boolean): ClusterRecipe {
-  const candidates = smallOnly ? RECIPES.filter((recipe) => recipe.small) : RECIPES;
-  const totalWeight = candidates.reduce((sum, recipe) => sum + recipe.weight, 0);
-  let roll = rng() * totalWeight;
-
-  for (const recipe of candidates) {
-    roll -= recipe.weight;
-    if (roll <= 0) {
-      return recipe.build(rng, unit, smallOnly);
-    }
+// Authored perspective study: geometry stays coherent, while each individual
+// stroke has a small fixed bow and a pressure taper. No frame-to-frame jitter.
+export function createPavilion(): Stroke[] {
+  const strokes: Stroke[] = [];
+  function line(
+    from: [number, number],
+    to: [number, number],
+    start: number,
+    duration: number,
+    width = 1.3,
+    opacity = 0.46
+  ) {
+    const length = Math.hypot(to[0] - from[0], to[1] - from[1]);
+    const count = Math.max(3, Math.ceil(length / 3));
+    const bow = Math.sin(strokes.length * 2.4) * 2.2;
+    const points = Array.from({ length: count }, (_, i) => {
+      const t = i / (count - 1);
+      const deviation =
+        Math.sin(t * Math.PI) * bow + Math.sin(t * Math.PI * 3 + strokes.length) * Math.sin(t * Math.PI) * 0.65;
+      return {
+        x: from[0] + (to[0] - from[0]) * t - ((to[1] - from[1]) / length) * deviation,
+        y: from[1] + (to[1] - from[1]) * t + ((to[0] - from[0]) / length) * deviation
+      };
+    });
+    strokes.push({ points, start, duration, width, opacity });
+  }
+  function path(points: [number, number][], start: number, duration: number, width = 1.3, opacity = 0.46) {
+    for (let i = 1; i < points.length; i++)
+      line(points[i - 1], points[i], start + (i - 1) * duration, duration, width, opacity);
   }
 
-  return candidates[candidates.length - 1].build(rng, unit, smallOnly);
-}
+  // Thinking lightly: extended vanishing lines, plumb lines, and an earlier roof.
+  line([45, 232], [810, 90], 0, 250, 0.7, 0.12);
+  line([66, 75], [822, 264], 70, 230, 0.7, 0.12);
+  line([85, 383], [817, 202], 220, 190, 0.7, 0.1);
+  line([87, 289], [801, 438], 300, 190, 0.7, 0.1);
+  line([167, 155], [163, 407], 390, 150, 0.8, 0.15);
+  line([480, 76], [484, 448], 460, 160, 0.8, 0.13);
+  line([738, 144], [739, 369], 540, 140, 0.8, 0.12);
+  path(
+    [
+      [106, 218],
+      [432, 117],
+      [782, 196]
+    ],
+    520,
+    120,
+    0.9,
+    0.19
+  );
 
-export function createStaticCluster(rng: Rng, unit: number): ClusterRecipe {
-  return annotatedBox(rng, unit);
+  // Long decisive gestures establish a cantilevered roof in two-point perspective.
+  path(
+    [
+      [105, 205],
+      [425, 98],
+      [791, 182],
+      [460, 292],
+      [105, 205]
+    ],
+    850,
+    160,
+    1.65,
+    0.62
+  );
+  path(
+    [
+      [105, 205],
+      [107, 217],
+      [460, 307],
+      [791, 193],
+      [791, 182]
+    ],
+    1510,
+    72,
+    1.05,
+    0.42
+  );
+  line([460, 292], [460, 307], 1740, 70, 1.7, 0.61);
+
+  // Glazing and recessed structural volume, leaving the roof to float above it.
+  path(
+    [
+      [172, 235],
+      [174, 345],
+      [484, 425],
+      [740, 338],
+      [740, 212]
+    ],
+    1900,
+    100,
+    1.3,
+    0.49
+  );
+  line([484, 311], [484, 425], 2250, 115, 1.8, 0.6);
+  line([174, 345], [432, 267], 2360, 130, 0.9, 0.24);
+  line([432, 267], [740, 338], 2480, 110, 0.9, 0.23);
+  line([432, 267], [432, 306], 2540, 80, 0.9, 0.21);
+  for (let i = 1; i <= 5; i++) {
+    const t = i / 6;
+    line([172 + 312 * t, 235 + 76 * t], [174 + 310 * t, 345 + 80 * t], 2600 + i * 42, 85, 0.85, i % 2 ? 0.3 : 0.43);
+  }
+  for (let i = 1; i <= 4; i++) {
+    const t = i / 5;
+    line([484 + 256 * t, 311 - 99 * t], [484 + 256 * t, 425 - 87 * t], 2800 + i * 35, 75, 0.8, 0.3);
+  }
+  // Ground plane and a pair of low steps anchor the sketch.
+  path(
+    [
+      [147, 350],
+      [482, 437],
+      [766, 341]
+    ],
+    3000,
+    110,
+    1.2,
+    0.43
+  );
+  path(
+    [
+      [148, 350],
+      [147, 359],
+      [482, 446],
+      [768, 350],
+      [766, 341]
+    ],
+    3160,
+    50,
+    0.9,
+    0.3
+  );
+  path(
+    [
+      [133, 366],
+      [286, 405],
+      [331, 390]
+    ],
+    3300,
+    65,
+    0.9,
+    0.32
+  );
+  line([115, 375], [269, 415], 3400, 90, 0.85, 0.25);
+
+  // A second pass revises the leading edge; the tentative line remains visible.
+  line([101, 202], [429, 94], 3510, 170, 1.1, 0.46);
+  line([458, 294], [795, 182], 3740, 155, 1.2, 0.51);
+
+  // Fast pencil hatching: roof plane, shaded soffit, and a ground shadow.
+  for (let i = 0; i < 30; i++) {
+    const t = 0.32 + i / 46;
+    const reach = 0.22 + Math.sin(i * 1.7) * 0.055;
+    const x = 425 + 366 * t;
+    const y = 101 + 84 * t;
+    line([x, y], [x - 317 * reach, y + 106 * reach], 3940 + i * 12, 48, 0.8, 0.16 + (i % 3) * 0.035);
+  }
+  for (let i = 0; i < 23; i++) {
+    const t = i / 23;
+    line([486 + 248 * t, 319 - 98 * t], [502 + 232 * t, 327 - 96 * t], 4250 + i * 10, 45, 0.8, 0.25);
+  }
+  for (let i = 0; i < 19; i++) {
+    const t = i / 19;
+    line([496 + 249 * t, 449 - 83 * t], [539 + 244 * t, 452 - 79 * t], 4510 + i * 10, 48, 0.7, 0.19);
+  }
+  line([169, 238], [171, 345], 3430, 85, 0.9, 0.3);
+  line([486, 313], [487, 425], 3610, 90, 1.0, 0.38);
+  line([146, 348], [486, 438], 3720, 130, 0.8, 0.29);
+  // Reflections are incomplete gestures, not a regular facade grid.
+  line([254, 270], [270, 330], 3860, 65, 0.7, 0.19);
+  line([260, 275], [277, 334], 3920, 50, 0.7, 0.14);
+  line([645, 273], [624, 344], 4020, 65, 0.7, 0.17);
+  return strokes;
 }
