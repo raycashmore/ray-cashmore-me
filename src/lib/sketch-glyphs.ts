@@ -9,7 +9,9 @@ export type Stroke = {
 };
 
 export const STUDY_SIZE = { w: 860, h: 470 };
-export const DRAW_DURATION = 4800;
+// Author gestures on a compact timeline; play them at a considered pencil pace.
+const SKETCH_PACE = 3.4;
+export const DRAW_DURATION = 4800 * SKETCH_PACE;
 
 // Fit the complete study into the larger clear space above or beside the name.
 // Both the animated and reduced-motion compositions use the same safe bounds.
@@ -40,7 +42,7 @@ export function fitStudy(width: number, height: number, content: Rect | null): R
 
 // Authored perspective study: geometry stays coherent, while each individual
 // stroke has a small fixed bow and a pressure taper. No frame-to-frame jitter.
-export function createPavilion(): Stroke[] {
+export function createSketch() {
   const strokes: Stroke[] = [];
   function line(
     from: [number, number],
@@ -62,12 +64,45 @@ export function createPavilion(): Stroke[] {
         y: from[1] + (to[1] - from[1]) * t + ((to[0] - from[0]) / length) * deviation
       };
     });
-    strokes.push({ points, start, duration, width, opacity });
+    strokes.push({ points, start: start * SKETCH_PACE, duration: duration * SKETCH_PACE, width, opacity });
   }
   function path(points: [number, number][], start: number, duration: number, width = 1.3, opacity = 0.46) {
     for (let i = 1; i < points.length; i++)
       line(points[i - 1], points[i], start + (i - 1) * duration, duration, width, opacity);
   }
+
+  function curve(
+    from: [number, number],
+    controlA: [number, number],
+    controlB: [number, number],
+    to: [number, number],
+    start: number,
+    duration: number,
+    width = 1.3,
+    opacity = 0.46
+  ) {
+    const length =
+      Math.hypot(controlA[0] - from[0], controlA[1] - from[1]) +
+      Math.hypot(controlB[0] - controlA[0], controlB[1] - controlA[1]) +
+      Math.hypot(to[0] - controlB[0], to[1] - controlB[1]);
+    const count = Math.max(3, Math.ceil(length / 3));
+    const phase = strokes.length * 1.7;
+    const points = Array.from({ length: count }, (_, i) => {
+      const t = i / (count - 1);
+      const u = 1 - t;
+      const drift = Math.sin(t * Math.PI) * Math.sin(t * 9 + phase) * 0.65;
+      return {
+        x: u ** 3 * from[0] + 3 * u * u * t * controlA[0] + 3 * u * t * t * controlB[0] + t ** 3 * to[0],
+        y: u ** 3 * from[1] + 3 * u * u * t * controlA[1] + 3 * u * t * t * controlB[1] + t ** 3 * to[1] + drift
+      };
+    });
+    strokes.push({ points, start: start * SKETCH_PACE, duration: duration * SKETCH_PACE, width, opacity });
+  }
+  return { strokes, line, path, curve };
+}
+
+export function createPavilion(): Stroke[] {
+  const { strokes, line, path } = createSketch();
 
   // Thinking lightly: extended vanishing lines, plumb lines, and an earlier roof.
   line([45, 232], [810, 90], 0, 250, 0.7, 0.12);
