@@ -1,14 +1,23 @@
-import { createPavilion, DRAW_DURATION, fitStudy, STUDY_SIZE } from './sketch-glyphs';
+import { createPavilion, fitStudy, STUDY_SIZE } from './sketch-glyphs';
 import type { Rect, Stroke } from './sketch-glyphs';
+import { createCoupe } from './sketch-coupe';
 
-export function startSketchHero(canvas: HTMLCanvasElement) {
+const STUDIES = [createCoupe, createPavilion];
+export const HOLD_DURATION = 12000;
+export const FADE_DURATION = 1400;
+
+export function startSketchHero(canvas: HTMLCanvasElement, random = Math.random) {
   const context = canvas.getContext('2d');
   if (!context) return () => {};
   const ctx = context;
   const hero = canvas.parentElement;
   const content = hero?.querySelector<HTMLElement>('[data-hero-content]');
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const strokes = createPavilion();
+  const pauseButton = hero?.querySelector<HTMLButtonElement>('[data-sketch-pause]');
+  let studyIndex = Math.floor(random() * STUDIES.length);
+  let strokes = STUDIES[studyIndex]();
+  let drawDuration = Math.max(...strokes.map((stroke) => stroke.start + stroke.duration));
+  let paused = false;
   let width = 0;
   let height = 0;
   let frame = 0;
@@ -45,7 +54,7 @@ export function startSketchHero(canvas: HTMLCanvasElement) {
 
   function render() {
     ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.065)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
     const unit = width >= 1280 ? 28 : 24;
     for (let y = 0; y < height; y += unit) {
       for (let x = 0; x < width; x += unit) {
@@ -57,27 +66,43 @@ export function startSketchHero(canvas: HTMLCanvasElement) {
     if (!placement) return;
     const scale = placement.w / STUDY_SIZE.w;
     ctx.save();
+    ctx.globalAlpha =
+      motion.matches || paused ? 1 : 1 - Math.max(0, (elapsed - drawDuration - HOLD_DURATION) / FADE_DURATION);
     ctx.translate(placement.x, placement.y);
     ctx.scale(scale, scale);
     ctx.lineCap = 'butt';
     ctx.lineJoin = 'round';
-    for (const stroke of strokes) drawStroke(stroke, motion.matches ? DRAW_DURATION : elapsed, scale);
+    for (const stroke of strokes) drawStroke(stroke, motion.matches ? drawDuration : elapsed, scale);
     ctx.restore();
   }
 
   function shouldRun() {
-    return !disposed && !document.hidden && inView && !motion.matches && elapsed < DRAW_DURATION;
+    return !disposed && !document.hidden && inView && !motion.matches && !paused;
   }
 
   function tick(now: number) {
     frame = 0;
-    elapsed = Math.min(DRAW_DURATION, elapsed + Math.min(now - previous, 64));
+    const before = elapsed;
+    elapsed += Math.min(now - previous, 64);
     previous = now;
-    render();
+    if (elapsed >= drawDuration + HOLD_DURATION + FADE_DURATION) {
+      // Choose among the other studies; with two, this naturally alternates
+      // after a random first choice. More studies can join without repeats.
+      studyIndex = (studyIndex + 1 + Math.floor(random() * (STUDIES.length - 1))) % STUDIES.length;
+      strokes = STUDIES[studyIndex]();
+      drawDuration = Math.max(...strokes.map((stroke) => stroke.start + stroke.duration));
+      elapsed = 0;
+    }
+    if (before < drawDuration || elapsed >= drawDuration + HOLD_DURATION || elapsed === 0) render();
     if (shouldRun()) frame = requestAnimationFrame(tick);
   }
 
   function sync() {
+    if (pauseButton) {
+      pauseButton.hidden = motion.matches;
+      pauseButton.textContent = paused ? 'Resume sketches' : 'Pause sketches';
+      pauseButton.setAttribute('aria-pressed', String(paused));
+    }
     if (shouldRun()) {
       if (!frame) {
         previous = performance.now();
@@ -88,6 +113,11 @@ export function startSketchHero(canvas: HTMLCanvasElement) {
       frame = 0;
     }
     render();
+  }
+
+  function togglePause() {
+    paused = !paused;
+    sync();
   }
 
   function resize() {
@@ -136,6 +166,7 @@ export function startSketchHero(canvas: HTMLCanvasElement) {
   if (hero) visibility.observe(hero);
   document.addEventListener('visibilitychange', sync);
   motion.addEventListener('change', sync);
+  pauseButton?.addEventListener('click', togglePause);
   // Font loading can move the text exclusion zone without resizing the canvas.
   void document.fonts.ready.then(resize);
   resize();
@@ -148,6 +179,7 @@ export function startSketchHero(canvas: HTMLCanvasElement) {
     visibility.disconnect();
     document.removeEventListener('visibilitychange', sync);
     motion.removeEventListener('change', sync);
+    pauseButton?.removeEventListener('click', togglePause);
     ctx.clearRect(0, 0, width, height);
   };
 }

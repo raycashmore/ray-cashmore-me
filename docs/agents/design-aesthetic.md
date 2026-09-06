@@ -15,11 +15,13 @@ The sketches bring a personal, exploratory quality to the structured Swiss Style
 - Keep the hero near-black with white typography and warm off-white strokes. The dot grid stays faint and subordinate; any colour accent should have a clear purpose.
 - Fit artwork around text and controls. Recompose on mobile rather than shrinking the desktop layout wholesale.
 
+The automotive study follows the supplied rear three-quarter reference: a low roof, broad rear, unequal wheel ellipses, and a large wing. Preserve those proportions and perspective while omitting badges and annotations. Continue into selected wing, vent, and diffuser details after establishing the main form. Keep wheels as simple outlines without hubs or spokes. Use a few exploratory overdraws and patches of shading rather than a uniformly finished outline.
+
 ## Motion and accessibility
 
-Drawing should feel gestural: varied stroke speeds, brief thinking pauses, and quick shading. Let the finished study remain visible. The current pavilion develops and settles in roughly five seconds; automotive sketches and doodles are future possibilities.
+Drawing should feel gestural: varied stroke speeds, brief thinking pauses, and quick shading. The pavilion draws in roughly sixteen seconds; the coupé continues into a detail pass for roughly twenty-five seconds. Each holds for twelve seconds after its final stroke, then fades before the next begins. The pavilion and automotive study rotate from a random first choice without consecutive repeats; rough doodles are a future possibility.
 
-Keep motion decorative. Preserve semantic HTML, readable content, navigation, and existing feature-flag behaviour. The canvas must not intercept input or appear to assistive technology. Show the completed study immediately for reduced motion, pause animation offscreen or in hidden tabs, and stop scheduling frames when complete.
+Keep motion decorative. Preserve semantic HTML, readable content, navigation, and existing feature-flag behaviour. The canvas must not intercept input or appear to assistive technology. Show a completed static study immediately for reduced motion. Keep the pause/resume control visually hidden until keyboard focus, with screen-reader access, pause offscreen or in hidden tabs, and avoid repainting the canvas during the static hold.
 
 Use the existing Astro and Canvas approach. Check text-safe placement at desktop and mobile sizes, including after resizing and font loading.
 
@@ -29,4 +31,5 @@ Use the existing Astro and Canvas approach. Check text-safe placement at desktop
 - [Global styles](../../src/styles/global.css): typography and theme tokens.
 - [Sketch renderer](../../src/lib/sketch-hero.ts): drawing, placement, and lifecycle.
 - [Pavilion study](../../src/lib/sketch-glyphs.ts): authored strokes, timing, and fit calculation.
+- [Coupé study](../../src/lib/sketch-coupe.ts): gesture curves, wheel studies, and shading.
 - [Sketch tests](../../src/lib/sketch-hero.test.ts): safe placement, completion, and reduced motion.

@@ -1,6 +1,7 @@
 import { afterEach, expect, test } from 'bun:test';
 import { createPavilion, DRAW_DURATION, fitStudy, STUDY_SIZE } from './sketch-glyphs';
-import { startSketchHero } from './sketch-hero';
+import { createCoupe } from './sketch-coupe';
+import { FADE_DURATION, HOLD_DURATION, startSketchHero } from './sketch-hero';
 
 for (const [width, height, text] of [
   [390, 844, { x: 32, y: 530, w: 240, h: 220 }],
@@ -23,9 +24,9 @@ for (const [width, height, text] of [
   });
 }
 
-test('all strokes are complete when the animation settles and stay inside the safe footprint', () => {
-  for (const stroke of createPavilion()) {
-    expect(stroke.start + stroke.duration).toBeLessThanOrEqual(DRAW_DURATION);
+test('both studies finish within the animation and stay inside the safe footprint', () => {
+  for (const stroke of [...createPavilion(), ...createCoupe()]) {
+    expect(stroke.start + stroke.duration).toBeLessThanOrEqual(45000);
     for (const point of stroke.points) {
       expect(point.x).toBeGreaterThanOrEqual(0);
       expect(point.x).toBeLessThanOrEqual(STUDY_SIZE.w);
@@ -48,11 +49,32 @@ afterEach(() => {
   originals.clear();
 });
 
-function scene(reduced: boolean) {
+function scene(reduced: boolean, choice = 0) {
   let drawn = 0;
   let nextFrame: FrameRequestCallback | undefined;
   const listeners = new Map<string, () => void>();
-  const motion = { matches: reduced, addEventListener() {}, removeEventListener() {} };
+  const motion = {
+    matches: reduced,
+    addEventListener(name: string, callback: () => void) {
+      listeners.set(name, callback);
+    },
+    removeEventListener() {}
+  };
+  let toggle = () => {};
+  const button = {
+    hidden: true,
+    textContent: '',
+    setAttribute() {},
+    addEventListener(_name: string, callback: () => void) {
+      toggle = callback;
+    },
+    removeEventListener() {}
+  };
+  const hero = {
+    querySelector(selector: string) {
+      return selector === '[data-sketch-pause]' ? button : null;
+    }
+  };
   const doc = {
     hidden: false,
     fonts: { ready: Promise.resolve() },
@@ -81,7 +103,7 @@ function scene(reduced: boolean) {
   };
   const canvas = {
     getContext: () => context,
-    parentElement: null,
+    parentElement: hero,
     getBoundingClientRect: () => ({ width: 1000, height: 700, left: 0, top: 0 })
   } as unknown as HTMLCanvasElement;
   stub('window', { matchMedia: () => motion, devicePixelRatio: 1 });
@@ -107,10 +129,13 @@ function scene(reduced: boolean) {
   stub('cancelAnimationFrame', () => {
     nextFrame = undefined;
   });
-  const cleanup = startSketchHero(canvas);
+  const cleanup = startSketchHero(canvas, () => choice);
   return {
     cleanup,
     doc,
+    motion,
+    button,
+    toggle: () => toggle(),
     listeners,
     drawn: () => drawn,
     pending: () => Boolean(nextFrame),
@@ -122,14 +147,14 @@ function scene(reduced: boolean) {
   };
 }
 
-test('reduced motion paints a finished sketch without scheduling animation', () => {
+test('reduced motion paints a finished coupé without scheduling animation', () => {
   const staticScene = scene(true);
   expect(staticScene.drawn()).toBeGreaterThan(0);
   expect(staticScene.pending()).toBe(false);
   staticScene.cleanup();
 });
 
-test('drawing pauses in hidden tabs, completes, then stops scheduling frames', () => {
+test('rotation pauses in hidden tabs and responds to pause/resume', () => {
   const animated = scene(false);
   expect(animated.pending()).toBe(true);
   animated.doc.hidden = true;
@@ -138,8 +163,49 @@ test('drawing pauses in hidden tabs, completes, then stops scheduling frames', (
   animated.doc.hidden = false;
   animated.listeners.get('visibilitychange')?.();
   const now = performance.now();
-  for (let i = 1; i <= 100; i++) animated.advance(now + i * 64);
+  for (let i = 1; i <= Math.ceil(DRAW_DURATION / 64) + 1; i++) animated.advance(now + i * 64);
   expect(animated.drawn()).toBeGreaterThan(0);
+  expect(animated.pending()).toBe(true);
+  animated.toggle();
   expect(animated.pending()).toBe(false);
+  expect(animated.button.textContent).toBe('Resume sketches');
+  animated.toggle();
+  expect(animated.pending()).toBe(true);
   animated.cleanup();
+  expect(animated.pending()).toBe(false);
+});
+
+for (const choice of [0, 0.99]) {
+  test(`rotation changes the study after its hold and fade (choice ${choice})`, () => {
+    const animated = scene(false, choice);
+    const now = performance.now();
+    let step = 0;
+    const advance = (duration: number) => {
+      for (let i = 0; i < Math.ceil(duration / 64); i++) animated.advance(now + ++step * 64);
+    };
+    const firstDuration = Math.max(
+      ...(choice === 0 ? createCoupe() : createPavilion()).map((stroke) => stroke.start + stroke.duration)
+    );
+    const nextDuration = Math.max(
+      ...(choice === 0 ? createPavilion() : createCoupe()).map((stroke) => stroke.start + stroke.duration)
+    );
+    advance(firstDuration);
+    const first = animated.drawn();
+    advance(1000);
+    expect(animated.drawn()).toBe(first);
+    advance(HOLD_DURATION + FADE_DURATION + nextDuration);
+    expect(animated.drawn()).toBeGreaterThan(0);
+    expect(animated.drawn()).not.toBe(first);
+    animated.motion.matches = true;
+    animated.listeners.get('change')?.();
+    expect(animated.pending()).toBe(false);
+    expect(animated.button.hidden).toBe(true);
+    animated.cleanup();
+  });
+}
+
+test('coupé detail continues beyond the original outline timing', () => {
+  const strokes = createCoupe();
+  expect(strokes.some((stroke) => stroke.start > DRAW_DURATION)).toBe(true);
+  expect(Math.max(...strokes.map((stroke) => stroke.start + stroke.duration))).toBeGreaterThan(DRAW_DURATION * 1.5);
 });
