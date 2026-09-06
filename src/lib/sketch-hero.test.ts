@@ -1,5 +1,6 @@
 import { afterEach, expect, test } from 'bun:test';
 import { createPavilion, DRAW_DURATION, fitStudy, STUDY_SIZE } from './sketch-glyphs';
+import { createAtrium } from './sketch-atrium';
 import { createCoupe } from './sketch-coupe';
 import { FADE_DURATION, HOLD_DURATION, startSketchHero } from './sketch-hero';
 
@@ -24,8 +25,8 @@ for (const [width, height, text] of [
   });
 }
 
-test('both studies finish within the animation and stay inside the safe footprint', () => {
-  for (const stroke of [...createPavilion(), ...createCoupe()]) {
+test('all studies finish within the animation and stay inside the safe footprint', () => {
+  for (const stroke of [...createPavilion(), ...createCoupe(), ...createAtrium()]) {
     expect(stroke.start + stroke.duration).toBeLessThanOrEqual(45000);
     for (const point of stroke.points) {
       expect(point.x).toBeGreaterThanOrEqual(0);
@@ -184,10 +185,10 @@ for (const choice of [0, 0.99]) {
       for (let i = 0; i < Math.ceil(duration / 64); i++) animated.advance(now + ++step * 64);
     };
     const firstDuration = Math.max(
-      ...(choice === 0 ? createCoupe() : createPavilion()).map((stroke) => stroke.start + stroke.duration)
+      ...(choice === 0 ? createCoupe() : createAtrium()).map((stroke) => stroke.start + stroke.duration)
     );
     const nextDuration = Math.max(
-      ...(choice === 0 ? createPavilion() : createCoupe()).map((stroke) => stroke.start + stroke.duration)
+      ...(choice === 0 ? createAtrium() : createCoupe()).map((stroke) => stroke.start + stroke.duration)
     );
     advance(firstDuration);
     const first = animated.drawn();
@@ -208,4 +209,12 @@ test('coupé detail continues beyond the original outline timing', () => {
   const strokes = createCoupe();
   expect(strokes.some((stroke) => stroke.start > DRAW_DURATION)).toBe(true);
   expect(Math.max(...strokes.map((stroke) => stroke.start + stroke.duration))).toBeGreaterThan(DRAW_DURATION * 1.5);
+});
+
+test('reduced motion paints a finished atrium without scheduling animation', () => {
+  const staticScene = scene(true, 0.99);
+  expect(staticScene.drawn()).toBeGreaterThan(0);
+  expect(staticScene.pending()).toBe(false);
+  expect(staticScene.button.hidden).toBe(true);
+  staticScene.cleanup();
 });

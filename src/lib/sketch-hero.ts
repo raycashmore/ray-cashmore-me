@@ -1,8 +1,9 @@
-import { createPavilion, fitStudy, STUDY_SIZE } from './sketch-glyphs';
+import { fitStudy, STUDY_SIZE } from './sketch-glyphs';
 import type { Rect, Stroke } from './sketch-glyphs';
 import { createCoupe } from './sketch-coupe';
+import { createAtrium } from './sketch-atrium';
 
-const STUDIES = [createCoupe, createPavilion];
+const STUDIES = [createCoupe, createAtrium];
 export const HOLD_DURATION = 12000;
 export const FADE_DURATION = 1400;
 
